@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_folder_card"
+    android:padding="14dp">
+
+    <ImageView
+        android:id="@+id/imgFolderIcon"
+        android:layout_width="42dp"
+        android:layout_height="34dp"
+        android:src="@drawable/ic_folder"
+        android:layout_marginBottom="10dp"
+        android:contentDescription="@null" />
+
+    <TextView
+        android:id="@+id/tvFolderOrgName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Organization Name"
+        android:textColor="@color/dark_blue"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:maxLines="2"
+        android:layout_marginBottom="3dp" />
+
+    <TextView
+        android:id="@+id/tvFolderMeta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0 files"
+        android:textColor="@color/text_gray"
+        android:textSize="10sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvFolderBadge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_folder_badge_clear"
+        android:paddingHorizontal="7dp"
+        android:paddingVertical="3dp"
+        android:text="CLEAR"
+        android:textColor="@color/teal_deep"
+        android:textSize="9sp"
+        android:textStyle="bold" />
+
+</LinearLayout>

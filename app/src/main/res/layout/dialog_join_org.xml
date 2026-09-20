@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dialog_top_rounded"
+    android:padding="22dp">
+
+    <TextView
+        android:id="@+id/tvJoinDialogTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Join Organization"
+        android:textColor="@color/dark_blue"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="14dp" />
+
+    <LinearLayout
+        android:id="@+id/recruitmentInfoBanner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/bg_recruitment_banner"
+        android:padding="12dp"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="17dp"
+            android:layout_height="17dp"
+            android:layout_marginTop="1dp"
+            android:src="@drawable/ic_alert_triangle"
+            android:contentDescription="@null" />
+
+        <TextView
+            android:id="@+id/tvRecruitmentInfoText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="9dp"
+            android:text="Audition required."
+            android:textColor="#7A4F0B"
+            android:textSize="11sp"
+            android:lineSpacingExtra="2dp" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="MESSAGE TO ADVISER (OPTIONAL)"
+        android:textColor="@color/dark_blue"
+        android:textSize="10.5sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.05"
+        android:layout_marginBottom="7dp" />
+
+    <EditText
+        android:id="@+id/etJoinMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="70dp"
+        android:background="@drawable/bg_dialog_textarea"
+        android:padding="11dp"
+        android:hint="e.g. I've been dancing since high school..."
+        android:textColorHint="@color/placeholder_gray"
+        android:textColor="@color/dark_blue"
+        android:textSize="12.5sp"
+        android:inputType="textMultiLine|textCapSentences"
+        android:gravity="top"
+        android:layout_marginBottom="18dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/btnCancelJoin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/bg_dialog_btn_cancel"
+            android:gravity="center"
+            android:padding="13dp"
+            android:text="Cancel"
+            android:textColor="@color/text_gray"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/btnSubmitJoin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/bg_dialog_btn_submit"
+            android:gravity="center"
+            android:padding="13dp"
+            android:text="Submit"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:clickable="true"
+            android:focusable="true" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_pending_card_border"
+    android:padding="13dp"
+    android:layout_marginBottom="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="11dp">
+
+        <TextView
+            android:id="@+id/tvAdminInitials"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:background="@drawable/bg_qa_circle_amber"
+            android:gravity="center"
+            android:text="MR"
+            android:textColor="@color/white"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="11dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvAdminName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Full Name"
+                android:textColor="@color/dark_blue"
+                android:textSize="12.5sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvAdminOrg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Org · username"
+                android:textColor="@color/text_gray"
+                android:textSize="10.5sp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_tag_pending"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"
+            android:text="PENDING"
+            android:textColor="@color/amber_text"
+            android:textSize="9sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="New organization application. Registration document attached — tap to view before deciding."
+        android:textColor="@color/text_gray"
+        android:textSize="10.5sp"
+        android:lineSpacingExtra="2dp"
+        android:layout_marginBottom="11dp" />
+
+    <LinearLayout
+        android:id="@+id/adminActionRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/btnRejectAdmin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/bg_doc_btn_reject"
+            android:gravity="center"
+            android:padding="11dp"
+            android:text="Reject"
+            android:textColor="@color/coral_text"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/btnApproveAdmin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/bg_doc_btn_approve"
+            android:gravity="center"
+            android:padding="11dp"
+            android:text="Approve"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:clickable="true"
+            android:focusable="true" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvAdminStatusResult"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="11dp"
+        android:text=""
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+</LinearLayout>

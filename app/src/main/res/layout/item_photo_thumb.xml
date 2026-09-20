@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="72dp"
+    android:layout_height="72dp"
+    android:layout_marginEnd="10dp">
+
+    <ImageView
+        android:id="@+id/imgPhoto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_photo_thumb_frame"
+        android:scaleType="centerCrop"
+        android:contentDescription="@null" />
+
+    <ImageView
+        android:id="@+id/btnRemovePhoto"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="top|end"
+        android:layout_margin="4dp"
+        android:padding="4dp"
+        android:background="@drawable/bg_remove_badge"
+        android:src="@drawable/ic_close"
+        android:contentDescription="@string/remove_photo"
+        android:clickable="true"
+        android:focusable="true" />
+
+</FrameLayout>

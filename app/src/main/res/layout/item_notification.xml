@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/bg_card"
+    android:padding="13dp"
+    android:layout_marginBottom="10dp">
+
+    <ImageView
+        android:id="@+id/imgNotifIcon"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:padding="9dp"
+        android:background="@drawable/bg_notif_icon_unread"
+        android:src="@drawable/ic_bell"
+        app:tint="@color/mid_blue"
+        android:contentDescription="@null" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="12dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvNotifTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Notification title"
+            android:textColor="@color/dark_blue"
+            android:textSize="12.5sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvNotifMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Notification message"
+            android:textColor="@color/text_gray"
+            android:textSize="11sp"
+            android:lineSpacingExtra="1dp" />
+
+        <TextView
+            android:id="@+id/tvNotifTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="1 hour ago"
+            android:textColor="#9BA9C2"
+            android:textSize="10sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/dotUnread"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:layout_marginStart="6dp"
+        android:layout_gravity="top"
+        android:background="@drawable/bg_unread_dot" />
+
+</LinearLayout>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="dark_blue">#0D3B8C</color>
+    <color name="mid_blue">#1E5FD9</color>
+    <color name="light_blue">#3B9BF0</color>
+    <color name="sky_blue">#5FC2F0</color>
+    <color name="teal_start">#2ED9C3</color>
+    <color name="teal_end">#1FA8A0</color>
+    <color name="admin_start">#2E9DF7</color>
+    <color name="admin_end">#4FC3F7</color>
+    <color name="text_gray">#5A6B7B</color>
+    <color name="white">#FFFFFF</color>
+    <color name="bg_light">#EAF2FB</color>
+
+    <color name="navy">#0B2E6B</color>
+    <color name="sky_accent">#3FA9F5</color>
+    <color name="teal_deep">#0C8E82</color>
+    <color name="amber">#F5A524</color>
+    <color name="amber_bg">#FEF3E0</color>
+    <color name="amber_text">#B9760F</color>
+    <color name="coral">#EF5350</color>
+    <color name="coral_bg">#FDEAEA</color>
+    <color name="coral_text">#C63A37</color>
+    <color name="teal_bg">#E4F9F6</color>
+    <color name="blue_bg">#E7EFFD</color>
+    <color name="card_border">#E4EAF4</color>
+
+    <color name="blue_deep">#1E7FDB</color>
+    <color name="blue_bg_light">#E7F3FE</color>
+    <color name="grey_bg">#F0F3F8</color>
+
+    <color name="student_avatar_bg">#22FFFFFF</color>
+    <color name="teal_deep_text">#0C8E82</color>
+    <color name="pending_bg">#FEF3E0</color>
+    <color name="pending_text">#B9760F</color>
+    <color name="logout_bg">#FDEAEA</color>
+    <color name="logout_text">#C63A37</color>
+
+    <color name="input_bg_blue">#E7F0FC</color>
+    <color name="input_bg_teal">#E1F7F3</color>
+    <color name="placeholder_gray">#9BA9C2</color>
+    <color name="badge_everyone_bg">#E7EFFD</color>
+    <color name="badge_admins_bg">#FEF3E0</color>
+    <color name="unread_bg">#F7FAFF</color>
+    <color name="unread_border">#BFD6FF</color>
+</resources>

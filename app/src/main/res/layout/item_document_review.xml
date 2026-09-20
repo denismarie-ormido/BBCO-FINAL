@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_card"
+    android:padding="14dp"
+    android:layout_marginBottom="12dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="11dp">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="10dp"
+            android:background="@drawable/bg_stat_icon_amber"
+            android:src="@drawable/ic_nav_documents"
+            app:tint="@color/amber_text"
+            android:contentDescription="@null" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="11dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvDocFileName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Document.pdf"
+                android:textColor="@color/dark_blue"
+                android:textSize="12.5sp"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/tvDocMeta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Org · Date"
+                android:textColor="@color/text_gray"
+                android:textSize="10.5sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvDocPreview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#F5F8FC"
+        android:padding="11dp"
+        android:text="Preview text"
+        android:textColor="@color/text_gray"
+        android:textSize="11sp"
+        android:lineSpacingExtra="2dp"
+        android:layout_marginBottom="12dp" />
+
+    <LinearLayout
+        android:id="@+id/docActionRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/btnReject"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/bg_doc_btn_reject"
+            android:gravity="center"
+            android:padding="11dp"
+            android:text="Reject"
+            android:textColor="@color/coral_text"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/btnApprove"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/bg_doc_btn_approve"
+            android:gravity="center"
+            android:padding="11dp"
+            android:text="Approve"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:clickable="true"
+            android:focusable="true" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvDocStatusResult"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="11dp"
+        android:text=""
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+</LinearLayout>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:background="@drawable/bg_card"
+    android:padding="12dp"
+    android:layout_marginBottom="10dp">
+
+    <TextView
+        android:id="@+id/tvMemberAvatar"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:background="@drawable/bg_avatar_circle_round"
+        android:gravity="center"
+        android:text="AB"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="12dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvMemberName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Full Name"
+            android:textColor="@color/dark_blue"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end" />
+
+        <TextView
+            android:id="@+id/tvMemberDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Details"
+            android:textColor="@color/text_gray"
+            android:textSize="11sp" />
+
+        <TextView
+            android:id="@+id/tvApplicationNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="💬 Application note"
+            android:textColor="@color/blue_deep"
+            android:textSize="10.5sp"
+            android:fontFamily="sans-serif-medium"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvMemberRoleTag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="3dp"
+        android:text="MEMBER"
+        android:textSize="9.5sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/btnRejectMember"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="6dp"
+        android:padding="7dp"
+        android:background="@drawable/bg_reject_btn"
+        android:src="@drawable/ic_reject_x"
+        app:tint="@color/coral_text"
+        android:visibility="gone"
+        android:contentDescription="@string/reject_member"
+        android:clickable="true"
+        android:focusable="true" />
+
+    <ImageView
+        android:id="@+id/btnApproveMember"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="6dp"
+        android:padding="7dp"
+        android:background="@drawable/bg_approve_btn"
+        android:src="@drawable/ic_check"
+        app:tint="@color/white"
+        android:visibility="gone"
+        android:contentDescription="@string/approve_member"
+        android:clickable="true"
+        android:focusable="true" />
+
+</LinearLayout>
