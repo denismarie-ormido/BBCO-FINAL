@@ -1,292 +1,652 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/bg_light">
 
+
+    <!-- ================================================= -->
+    <!-- HEADER -->
+    <!-- ================================================= -->
+
     <LinearLayout
-        android:id="@+id/topBar"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:background="@color/white"
+        android:background="@drawable/bg_header_gradient_admin"
+        android:elevation="4dp"
         android:paddingHorizontal="18dp"
-        android:paddingVertical="14dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:paddingTop="18dp"
+        android:paddingBottom="16dp">
+
 
         <ImageView
             android:id="@+id/btnBack"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:background="@drawable/bg_header_icon_btn"
             android:padding="9dp"
-            android:background="@drawable/bg_back_circle_light"
-            android:src="@drawable/ic_back_arrow"
-            android:contentDescription="@string/back"
+            android:src="@drawable/ic_chat_back"
             android:clickable="true"
-            android:focusable="true" />
+            android:focusable="true"
+            android:contentDescription="Back" />
 
-        <TextView
+
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginStart="14dp"
-            android:text="Edit Organization Profile"
-            android:textColor="@color/dark_blue"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+            android:layout_marginStart="12dp"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Edit Organization Profile"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="Update how students see your organization"
+                android:textColor="#CFE6FF"
+                android:textSize="11sp" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="0dp"
+
+    <!-- ================================================= -->
+    <!-- FORM -->
+    <!-- ================================================= -->
+
+    <ScrollView
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/topBar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:overScrollMode="never"
+        android:fillViewport="true">
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="18dp">
+            android:padding="16dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="ORGANIZATION NAME"
-                android:textColor="@color/dark_blue"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.05"
-                android:layout_marginBottom="7dp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="54dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:background="@drawable/bg_pill_input_blue"
-                android:paddingHorizontal="18dp"
-                android:layout_marginBottom="16dp">
-
-                <ImageView
-                    android:layout_width="19dp"
-                    android:layout_height="19dp"
-                    android:src="@drawable/ic_building"
-                    app:tint="@color/placeholder_gray"
-                    android:contentDescription="@null" />
-
-                <EditText
-                    android:id="@+id/etEditOrgName"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="12dp"
-                    android:background="@null"
-                    android:text="Red Cross Youth"
-                    android:textColor="@color/dark_blue"
-                    android:textSize="13.5sp"
-                    android:inputType="text" />
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="CATEGORY"
-                android:textColor="@color/dark_blue"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.05"
-                android:layout_marginBottom="7dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="54dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:background="@drawable/bg_pill_input_blue"
-                android:paddingHorizontal="18dp"
-                android:layout_marginBottom="16dp">
-
-                <ImageView
-                    android:layout_width="19dp"
-                    android:layout_height="19dp"
-                    android:src="@drawable/ic_person"
-                    app:tint="@color/placeholder_gray"
-                    android:contentDescription="@null" />
-
-                <EditText
-                    android:id="@+id/etEditOrgCategory"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="12dp"
-                    android:background="@null"
-                    android:text="Student Organization"
-                    android:textColor="@color/dark_blue"
-                    android:textSize="13.5sp"
-                    android:inputType="text" />
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="DESCRIPTION"
-                android:textColor="@color/dark_blue"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.05"
-                android:layout_marginBottom="7dp" />
+            <!-- ============================================= -->
+            <!-- CARD: BASIC INFORMATION -->
+            <!-- ============================================= -->
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="@drawable/bg_pill_input_blue"
-                android:paddingHorizontal="18dp"
-                android:paddingVertical="14dp"
-                android:minHeight="54dp"
-                android:layout_marginBottom="16dp">
+                android:orientation="vertical"
+                android:background="@drawable/bg_card"
+                android:padding="16dp"
+                android:layout_marginBottom="14dp">
 
-                <ImageView
-                    android:layout_width="19dp"
-                    android:layout_height="19dp"
-                    android:layout_marginTop="2dp"
-                    android:src="@drawable/ic_notes"
-                    android:contentDescription="@null" />
-
-                <EditText
-                    android:id="@+id/etEditOrgDescription"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="12dp"
-                    android:background="@null"
-                    android:text="Promoting volunteerism, leadership, community service, and youth development."
-                    android:textColor="@color/dark_blue"
-                    android:textSize="13sp"
-                    android:inputType="textMultiLine|textCapSentences"
-                    android:minLines="3"
-                    android:maxLines="6"
-                    android:gravity="top" />
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="FOUNDED YEAR"
-                android:textColor="@color/dark_blue"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.05"
-                android:layout_marginBottom="7dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="54dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:background="@drawable/bg_pill_input_blue"
-                android:paddingHorizontal="18dp"
-                android:layout_marginBottom="24dp">
-
-                <ImageView
-                    android:layout_width="19dp"
-                    android:layout_height="19dp"
-                    android:src="@drawable/ic_calendar"
-                    android:contentDescription="@null" />
-
-                <EditText
-                    android:id="@+id/etEditOrgFounded"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="12dp"
-                    android:background="@null"
-                    android:text="2017"
-                    android:textColor="@color/dark_blue"
-                    android:textSize="13.5sp"
-                    android:inputType="number"
-                    android:maxLength="4" />
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="RECRUITMENT INFO (OPTIONAL)"
-                android:textColor="@color/dark_blue"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.05"
-                android:layout_marginBottom="7dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Let applicants know if auditions, portfolios, or other steps are required."
-                android:textColor="@color/text_gray"
-                android:textSize="10.5sp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="@drawable/bg_pill_input_blue"
-                android:paddingHorizontal="18dp"
-                android:paddingVertical="14dp"
-                android:minHeight="54dp"
-                android:layout_marginBottom="24dp">
-
-                <ImageView
-                    android:layout_width="19dp"
-                    android:layout_height="19dp"
-                    android:layout_marginTop="2dp"
-                    android:src="@drawable/ic_notes"
-                    android:contentDescription="@null" />
-
-                <EditText
-                    android:id="@+id/etEditRecruitmentInfo"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="12dp"
-                    android:background="@null"
-                    android:hint="e.g. Audition required. Prepare a 1-minute dance routine."
-                    android:textColorHint="@color/placeholder_gray"
-                    android:textColor="@color/dark_blue"
-                    android:textSize="13sp"
-                    android:inputType="textMultiLine|textCapSentences"
-                    android:minLines="2"
-                    android:maxLines="4"
-                    android:gravity="top" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/btnSaveProfile"
-                android:layout_width="match_parent"
-                android:layout_height="54dp"
-                android:gravity="center"
-                android:background="@drawable/bg_pill_btn_admin"
-                android:clickable="true"
-                android:focusable="true">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="SAVE CHANGES"
-                    android:textColor="@color/white"
-                    android:textSize="14sp"
+                    android:text="Basic information"
+                    android:textColor="@color/dark_blue"
+                    android:textSize="14.5sp"
+                    android:textStyle="bold" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="This is what students see on your profile."
+                    android:textColor="@color/text_gray"
+                    android:textSize="11sp" />
+
+
+                <!-- ORGANIZATION NAME -->
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginBottom="6dp"
+                    android:text="ORGANIZATION NAME"
+                    android:textColor="@color/text_gray"
+                    android:textSize="9.5sp"
                     android:textStyle="bold"
-                    android:letterSpacing="0.04" />
+                    android:letterSpacing="0.05" />
+
+
+                <EditText
+                    android:id="@+id/etEditOrgName"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="@drawable/bg_search"
+                    android:hint="e.g. Red Cross Youth"
+                    android:inputType="textCapWords"
+                    android:paddingHorizontal="14dp"
+                    android:singleLine="true"
+                    android:textColor="@color/dark_blue"
+                    android:textColorHint="@color/placeholder_gray"
+                    android:textSize="13sp" />
+
+
+                <!-- CATEGORY -->
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="6dp"
+                    android:text="CATEGORY"
+                    android:textColor="@color/text_gray"
+                    android:textSize="9.5sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.05" />
+
+
+                <EditText
+                    android:id="@+id/etEditOrgCategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="@drawable/bg_search"
+                    android:hint="e.g. Service / Academic / Arts"
+                    android:inputType="textCapWords"
+                    android:paddingHorizontal="14dp"
+                    android:singleLine="true"
+                    android:textColor="@color/dark_blue"
+                    android:textColorHint="@color/placeholder_gray"
+                    android:textSize="13sp" />
+
+
+                <!-- YEAR FOUNDED -->
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="6dp"
+                    android:text="YEAR FOUNDED"
+                    android:textColor="@color/text_gray"
+                    android:textSize="9.5sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.05" />
+
+
+                <EditText
+                    android:id="@+id/etEditOrgFounded"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="@drawable/bg_search"
+                    android:hint="e.g. 2015"
+                    android:inputType="number"
+                    android:maxLength="4"
+                    android:paddingHorizontal="14dp"
+                    android:singleLine="true"
+                    android:textColor="@color/dark_blue"
+                    android:textColorHint="@color/placeholder_gray"
+                    android:textSize="13sp" />
+
+
+                <!-- ============================================= -->
+                <!-- ADVISERS -->
+                <!-- ============================================= -->
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="ORGANIZATION ADVISERS"
+                    android:textColor="@color/text_gray"
+                    android:textSize="9.5sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.05" />
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="Add the faculty adviser or advisers currently assigned to the organization."
+                    android:textColor="@color/placeholder_gray"
+                    android:textSize="10.5sp" />
+
+
+                <!-- ADVISER 1 -->
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="6dp"
+                    android:text="ADVISER 1"
+                    android:textColor="@color/text_gray"
+                    android:textSize="9.5sp"
+                    android:textStyle="bold" />
+
+
+                <EditText
+                    android:id="@+id/etEditOrgAdviser1"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="@drawable/bg_search"
+                    android:hint="Enter primary adviser"
+                    android:inputType="textPersonName|textCapWords"
+                    android:paddingHorizontal="14dp"
+                    android:singleLine="true"
+                    android:textColor="@color/dark_blue"
+                    android:textColorHint="@color/placeholder_gray"
+                    android:textSize="13sp" />
+
+
+                <!-- ADVISER 2 -->
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="6dp"
+                    android:text="ADVISER 2 (OPTIONAL)"
+                    android:textColor="@color/text_gray"
+                    android:textSize="9.5sp"
+                    android:textStyle="bold" />
+
+
+                <EditText
+                    android:id="@+id/etEditOrgAdviser2"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="@drawable/bg_search"
+                    android:hint="Enter second adviser if applicable"
+                    android:inputType="textPersonName|textCapWords"
+                    android:paddingHorizontal="14dp"
+                    android:singleLine="true"
+                    android:textColor="@color/dark_blue"
+                    android:textColorHint="@color/placeholder_gray"
+                    android:textSize="13sp" />
+
+
+                <!-- DESCRIPTION -->
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginBottom="6dp"
+                    android:text="DESCRIPTION"
+                    android:textColor="@color/text_gray"
+                    android:textSize="9.5sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.05" />
+
+
+                <EditText
+                    android:id="@+id/etEditOrgDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@drawable/bg_compose_textarea"
+                    android:gravity="top|start"
+                    android:hint="Tell students what your organization is about..."
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:padding="14dp"
+                    android:textColor="@color/dark_blue"
+                    android:textColorHint="@color/placeholder_gray"
+                    android:textSize="13sp" />
+
+            </LinearLayout>
+
+
+            <!-- ============================================= -->
+            <!-- CARD: RECRUITMENT -->
+            <!-- ============================================= -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_card"
+                android:padding="16dp">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Recruitment"
+                        android:textColor="@color/dark_blue"
+                        android:textSize="14.5sp"
+                        android:textStyle="bold" />
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_admin_badge"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="4dp"
+                        android:text="SHOWN WHEN JOINING"
+                        android:textColor="@color/blue_deep"
+                        android:textSize="8sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="Tell students what to do when they apply to join."
+                    android:textColor="@color/text_gray"
+                    android:textSize="11sp" />
+
+
+                <!-- ============================================= -->
+                <!-- RECRUITMENT STATUS -->
+                <!-- ============================================= -->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:orientation="vertical"
+                    android:background="@drawable/bg_info_note"
+                    android:padding="14dp">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+
+                            <TextView
+                                android:id="@+id/tvRecruitmentStatus"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Recruitment is OPEN"
+                                android:textColor="@color/dark_blue"
+                                android:textSize="13.5sp"
+                                android:textStyle="bold" />
+
+
+                            <TextView
+                                android:id="@+id/tvRecruitmentStatusHint"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="Students can send join requests."
+                                android:textColor="@color/text_gray"
+                                android:textSize="10.5sp" />
+
+                        </LinearLayout>
+
+
+                        <androidx.appcompat.widget.SwitchCompat
+                            android:id="@+id/switchRecruitmentOpen"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="true" />
+
+                    </LinearLayout>
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:layout_marginBottom="6dp"
+                        android:text="MEMBER LIMIT (OPTIONAL)"
+                        android:textColor="@color/text_gray"
+                        android:textSize="9.5sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.05" />
+
+
+                    <EditText
+                        android:id="@+id/etRecruitmentLimit"
+                        android:layout_width="match_parent"
+                        android:layout_height="46dp"
+                        android:background="@drawable/bg_search"
+                        android:hint="e.g. 50 (leave blank for no limit)"
+                        android:inputType="number"
+                        android:maxLength="5"
+                        android:paddingHorizontal="14dp"
+                        android:singleLine="true"
+                        android:textColor="@color/dark_blue"
+                        android:textColorHint="@color/placeholder_gray"
+                        android:textSize="13sp" />
+
+
+                    <TextView
+                        android:id="@+id/tvRecruitmentCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="Current members: 0"
+                        android:textColor="@color/text_gray"
+                        android:textSize="10.5sp" />
+
+                </LinearLayout>
+
+
+                <!-- INSTRUCTIONS -->
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginBottom="6dp"
+                    android:text="INSTRUCTIONS FOR APPLICANTS"
+                    android:textColor="@color/text_gray"
+                    android:textSize="9.5sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.05" />
+
+
+                <EditText
+                    android:id="@+id/etEditRecruitmentInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@drawable/bg_compose_textarea"
+                    android:gravity="top|start"
+                    android:hint="e.g. Fill out the application form, then upload your COR and a 2x2 photo."
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:padding="14dp"
+                    android:textColor="@color/dark_blue"
+                    android:textColorHint="@color/placeholder_gray"
+                    android:textSize="13sp" />
+
+
+                <!-- FILES FOR APPLICANTS -->
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:text="FILES FOR APPLICANTS"
+                    android:textColor="@color/text_gray"
+                    android:textSize="9.5sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.05" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="Forms, flyers, or guidelines students can open and download."
+                    android:textColor="@color/placeholder_gray"
+                    android:textSize="10.5sp" />
+
+
+                <LinearLayout
+                    android:id="@+id/filesContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+
+                <TextView
+                    android:id="@+id/tvFilesEmpty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="No files attached yet."
+                    android:textColor="@color/placeholder_gray"
+                    android:textSize="11.5sp" />
+
+
+                <TextView
+                    android:id="@+id/tvUploadStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Uploading..."
+                    android:textColor="@color/blue_deep"
+                    android:textSize="11.5sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+
+                <TextView
+                    android:id="@+id/btnAddRecruitFile"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:background="@drawable/bg_add_photo_button"
+                    android:gravity="center"
+                    android:text="+  Attach a file"
+                    android:textColor="@color/blue_deep"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+
+                <!-- REQUIREMENTS -->
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="WHAT STUDENTS MUST SUBMIT"
+                    android:textColor="@color/text_gray"
+                    android:textSize="9.5sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.05" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="Each item becomes an upload slot when a student joins."
+                    android:textColor="@color/placeholder_gray"
+                    android:textSize="10.5sp" />
+
+
+                <LinearLayout
+                    android:id="@+id/requirementsContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+
+                <TextView
+                    android:id="@+id/tvRequirementsEmpty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="No requirements yet. Students can join without uploading documents."
+                    android:textColor="@color/placeholder_gray"
+                    android:textSize="11.5sp" />
+
+
+                <TextView
+                    android:id="@+id/btnAddRequirement"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:background="@drawable/bg_add_photo_button"
+                    android:gravity="center"
+                    android:text="+  Add requirement"
+                    android:textColor="@color/blue_deep"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:clickable="true"
+                    android:focusable="true" />
+
             </LinearLayout>
 
         </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+
+    <!-- ================================================= -->
+    <!-- SAVE BAR -->
+    <!-- ================================================= -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:elevation="8dp"
+        android:padding="14dp">
+
+
+        <LinearLayout
+            android:id="@+id/btnSaveProfile"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/bg_post_submit_btn"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
+
+
+            <TextView
+                android:id="@+id/tvSaveLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save changes"
+                android:textColor="@color/white"
+                android:textSize="13.5sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_light">
+    android:background="@color/bg_light"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="18dp">
+
+        <!-- ORGANIZATIONS HEADING -->
 
         <TextView
             android:layout_width="wrap_content"
@@ -19,6 +24,8 @@
             android:textSize="16sp"
             android:textStyle="bold"
             android:layout_marginBottom="14dp" />
+
+        <!-- EXISTING SEARCH BAR -->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -45,7 +52,110 @@
                 android:hint="Search organizations..."
                 android:textSize="13sp"
                 android:inputType="text" />
+
         </LinearLayout>
+
+        <!-- AI MATCHER CARD -->
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/btnSmartMatch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="17dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="Find My Organization with AI"
+            app:cardBackgroundColor="#E5F9F8"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp"
+            app:strokeColor="#B8E5E5"
+            app:strokeWidth="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="12dp">
+
+                <!-- AI ICON -->
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:clickable="false"
+                    android:focusable="false"
+                    app:cardBackgroundColor="#159D96"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="✦"
+                        android:textColor="#FFFFFF"
+                        android:textSize="22sp" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- AI TITLE AND DESCRIPTION -->
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="7dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Find your organization with AI"
+                        android:textColor="#14527C"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Discover groups that match your interests."
+                        android:textColor="#5E8292"
+                        android:textSize="10.5sp" />
+
+                </LinearLayout>
+
+                <!-- FIND MY MATCH BUTTON -->
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="false"
+                    android:focusable="false"
+                    app:cardBackgroundColor="#0DAEA5"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="0dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="12dp"
+                        android:gravity="center"
+                        android:text="Find My Match →"
+                        android:textColor="#FFFFFF"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- EXISTING FILTERS -->
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -60,7 +170,7 @@
                 android:background="@drawable/bg_chip_active"
                 android:paddingHorizontal="14dp"
                 android:paddingVertical="7dp"
-                android:text="All (14)"
+                android:text="All (2)"
                 android:textColor="@color/white"
                 android:textSize="11.5sp"
                 android:textStyle="bold"
@@ -75,7 +185,7 @@
                 android:background="@drawable/bg_chip"
                 android:paddingHorizontal="14dp"
                 android:paddingVertical="7dp"
-                android:text="Joined (2)"
+                android:text="Joined (1)"
                 android:textColor="@color/text_gray"
                 android:textSize="11.5sp"
                 android:textStyle="bold"
@@ -90,21 +200,24 @@
                 android:background="@drawable/bg_chip"
                 android:paddingHorizontal="14dp"
                 android:paddingVertical="7dp"
-                android:text="Pending (1)"
+                android:text="Pending (0)"
                 android:textColor="@color/text_gray"
                 android:textSize="11.5sp"
                 android:textStyle="bold"
                 android:clickable="true"
                 android:focusable="true" />
+
         </LinearLayout>
+
+        <!-- EXISTING ORGANIZATION LIST -->
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvBrowseOrgs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:nestedScrollingEnabled="false"
-            tools:listitem="@layout/item_browse_org"
-            xmlns:tools="http://schemas.android.com/tools" />
+            tools:listitem="@layout/item_browse_org" />
 
     </LinearLayout>
+
 </androidx.core.widget.NestedScrollView>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:background="@drawable/bg_search"
+    android:padding="11dp"
+    android:layout_marginBottom="8dp">
+
+    <TextView
+        android:id="@+id/tvReqTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Requirement"
+        android:textColor="@color/dark_blue"
+        android:textSize="12.5sp"
+        android:textStyle="bold" />
+
+    <!-- I-tap aron usbon: REQUIRED / OPTIONAL -->
+    <TextView
+        android:id="@+id/tvReqRequired"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="3dp"
+        android:text="REQUIRED"
+        android:textSize="9sp"
+        android:textStyle="bold"
+        android:clickable="true"
+        android:focusable="true" />
+
+    <TextView
+        android:id="@+id/btnRemoveReq"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="4dp"
+        android:gravity="center"
+        android:text="✕"
+        android:textColor="@color/coral_text"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:clickable="true"
+        android:focusable="true" />
+
+</LinearLayout>

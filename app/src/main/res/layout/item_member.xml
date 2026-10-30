@@ -1,103 +1,196 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+
+<com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:gravity="center_vertical"
-    android:background="@drawable/bg_card"
-    android:padding="12dp"
-    android:layout_marginBottom="10dp">
-
-    <TextView
-        android:id="@+id/tvMemberAvatar"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
-        android:background="@drawable/bg_avatar_circle_round"
-        android:gravity="center"
-        android:text="AB"
-        android:textColor="@color/white"
-        android:textSize="12sp"
-        android:textStyle="bold" />
+    android:layout_marginBottom="10dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="0dp"
+    app:cardBackgroundColor="#FFFFFF"
+    app:strokeColor="#E4EBF5"
+    app:strokeWidth="1dp">
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginStart="12dp"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="12dp"
+        android:foreground="?attr/selectableItemBackground">
+
+        <!-- ===================================================
+             AVATAR
+             =================================================== -->
+
+        <FrameLayout
+            android:layout_width="44dp"
+            android:layout_height="44dp">
+
+            <TextView
+                android:id="@+id/tvMemberAvatar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_avatar_circle_round"
+                android:gravity="center"
+                android:text="AB"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/imgMemberAvatar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:visibility="gone"
+                android:contentDescription="Member profile picture" />
+
+        </FrameLayout>
+
+
+        <!-- ===================================================
+             DETAILS
+             =================================================== -->
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="12dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvMemberName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Full Name"
+                android:textColor="#0B2E6B"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/tvMemberDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="Student details"
+                android:textColor="#6B7A90"
+                android:textSize="11sp"
+                android:maxLines="2"
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/tvApplicationNote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="💬 Application note"
+                android:textColor="#2563EB"
+                android:textSize="10.5sp"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tvMemberDocs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:background="@drawable/bg_add_photo_button"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:text="📎 Documents · View"
+                android:textColor="#2563EB"
+                android:textSize="10.5sp"
+                android:textStyle="bold"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+
+        <!-- ===================================================
+             ROLE
+             =================================================== -->
 
         <TextView
-            android:id="@+id/tvMemberName"
-            android:layout_width="match_parent"
+            android:id="@+id/tvMemberRoleTag"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Full Name"
-            android:textColor="@color/dark_blue"
-            android:textSize="13sp"
+            android:layout_marginStart="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:text="MEMBER"
+            android:textSize="9sp"
             android:textStyle="bold"
-            android:maxLines="1"
-            android:ellipsize="end" />
+            android:maxLines="1" />
 
-        <TextView
-            android:id="@+id/tvMemberDetails"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:text="Details"
-            android:textColor="@color/text_gray"
-            android:textSize="11sp" />
 
-        <TextView
-            android:id="@+id/tvApplicationNote"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="💬 Application note"
-            android:textColor="@color/blue_deep"
-            android:textSize="10.5sp"
-            android:fontFamily="sans-serif-medium"
-            android:maxLines="2"
-            android:ellipsize="end"
-            android:visibility="gone" />
+        <!-- ===================================================
+             PENDING: REJECT
+             =================================================== -->
+
+        <ImageView
+            android:id="@+id/btnRejectMember"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="6dp"
+            android:padding="7dp"
+            android:background="@drawable/bg_reject_btn"
+            android:src="@drawable/ic_reject_x"
+            app:tint="@color/coral_text"
+            android:visibility="gone"
+            android:contentDescription="@string/reject_member"
+            android:clickable="true"
+            android:focusable="true" />
+
+
+        <!-- ===================================================
+             PENDING: APPROVE
+             =================================================== -->
+
+        <ImageView
+            android:id="@+id/btnApproveMember"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="6dp"
+            android:padding="7dp"
+            android:background="@drawable/bg_approve_btn"
+            android:src="@drawable/ic_check"
+            app:tint="@color/white"
+            android:visibility="gone"
+            android:contentDescription="@string/approve_member"
+            android:clickable="true"
+            android:focusable="true" />
+
+
+        <!-- ===================================================
+             ACTIVE MEMBER/OFFICER: 3 DOT MENU
+             =================================================== -->
+
+        <ImageView
+            android:id="@+id/btnMemberMenu"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="4dp"
+            android:padding="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_more_vert"
+            app:tint="#6B7A90"
+            android:visibility="gone"
+            android:contentDescription="Member options"
+            android:clickable="true"
+            android:focusable="true" />
+
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tvMemberRoleTag"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="8dp"
-        android:paddingVertical="3dp"
-        android:text="MEMBER"
-        android:textSize="9.5sp"
-        android:textStyle="bold" />
-
-    <ImageView
-        android:id="@+id/btnRejectMember"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
-        android:layout_marginStart="6dp"
-        android:padding="7dp"
-        android:background="@drawable/bg_reject_btn"
-        android:src="@drawable/ic_reject_x"
-        app:tint="@color/coral_text"
-        android:visibility="gone"
-        android:contentDescription="@string/reject_member"
-        android:clickable="true"
-        android:focusable="true" />
-
-    <ImageView
-        android:id="@+id/btnApproveMember"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
-        android:layout_marginStart="6dp"
-        android:padding="7dp"
-        android:background="@drawable/bg_approve_btn"
-        android:src="@drawable/ic_check"
-        app:tint="@color/white"
-        android:visibility="gone"
-        android:contentDescription="@string/approve_member"
-        android:clickable="true"
-        android:focusable="true" />
-
-</LinearLayout>
+</com.google.android.material.card.MaterialCardView>

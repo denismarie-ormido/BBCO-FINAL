@@ -2,6 +2,8 @@ package com.example.kayara
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.text.InputType
@@ -16,14 +18,18 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.cloudinary.android.MediaManager
+import com.cloudinary.android.callback.ErrorInfo
+import com.cloudinary.android.callback.UploadCallback
 import com.google.android.material.imageview.ShapeableImageView
+import com.google.android.material.shape.ShapeAppearanceModel
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.firestore.ListenerRegistration
 import java.text.SimpleDateFormat
 import java.util.Locale
-
 
 class ProfileFragment : Fragment() {
 
@@ -33,14 +39,25 @@ class ProfileFragment : Fragment() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
-    private lateinit var storage: FirebaseStorage
 
+    private var membershipsListener: ListenerRegistration? = null
+    private var organizationsListener: ListenerRegistration? = null
+
+    private val maxOrganizations = 3
+
+    // FIX: tinuod nga organization IDs ug latest memberships
+    private val validOrganizationIds = mutableSetOf<String>()
+    private var membershipDocs: List<DocumentSnapshot> = emptyList()
+
+    private var profileUserId: String = ""
+    private var viewOnly: Boolean = false
 
     // =========================================================
     // PROFILE VIEWS
     // =========================================================
 
     private lateinit var ivProfile: ShapeableImageView
+    private lateinit var tvProfileInitials: TextView
 
     private lateinit var tvProfileName: TextView
     private lateinit var tvProfileCourse: TextView
@@ -49,24 +66,68 @@ class ProfileFragment : Fragment() {
     private lateinit var tvProfileContact: TextView
     private lateinit var tvProfileYearLevel: TextView
 
-
-    // =========================================================
-    // MEMBERSHIP CONTAINER
-    // =========================================================
-
     private lateinit var membershipContainer: LinearLayout
-
-
-    // =========================================================
-    // SELECTED IMAGE
-    // =========================================================
-
-    private var selectedImageUri: Uri? = null
-
 
     // =========================================================
     // IMAGE PICKER
     // =========================================================
+
+    companion object {
+
+        private const val ARG_PROFILE_USER_ID =
+            "profileUserId"
+
+        private const val ARG_VIEW_ONLY =
+            "viewOnly"
+
+        fun newInstance(
+            studentUid: String,
+            viewOnly: Boolean = true
+        ): ProfileFragment {
+
+            return ProfileFragment().apply {
+
+                arguments =
+                    Bundle().apply {
+
+                        putString(
+                            ARG_PROFILE_USER_ID,
+                            studentUid
+                        )
+
+                        putBoolean(
+                            ARG_VIEW_ONLY,
+                            viewOnly
+                        )
+                    }
+            }
+        }
+    }
+
+    override fun onCreate(
+        savedInstanceState: Bundle?
+    ) {
+
+        super.onCreate(
+            savedInstanceState
+        )
+
+        profileUserId =
+            arguments
+                ?.getString(
+                    ARG_PROFILE_USER_ID
+                )
+                ?.trim()
+                .orEmpty()
+
+        viewOnly =
+            arguments
+                ?.getBoolean(
+                    ARG_VIEW_ONLY,
+                    false
+                )
+                ?: false
+    }
 
     private val pickImage =
         registerForActivityResult(
@@ -75,19 +136,13 @@ class ProfileFragment : Fragment() {
 
             if (uri != null) {
 
-                selectedImageUri = uri
-
-                // Show selected image immediately
                 Glide.with(this)
                     .load(uri)
-                    .placeholder(R.drawable.bg_profile_avatar)
                     .into(ivProfile)
 
-                // Upload to Firebase Storage
                 uploadProfilePicture(uri)
             }
         }
-
 
     // =========================================================
     // ON CREATE VIEW
@@ -105,127 +160,118 @@ class ProfileFragment : Fragment() {
             false
         )
 
-
-        // =====================================================
-        // INITIALIZE FIREBASE
-        // =====================================================
-
         auth = FirebaseAuth.getInstance()
-
         db = FirebaseFirestore.getInstance()
 
-        storage = FirebaseStorage.getInstance()
-
-
-        // =====================================================
-        // INITIALIZE PROFILE VIEWS
-        // =====================================================
-
-        ivProfile =
-            view.findViewById(R.id.ivProfile)
-
-        tvProfileName =
-            view.findViewById(R.id.tvProfileName)
-
-        tvProfileCourse =
-            view.findViewById(R.id.tvProfileCourse)
-
-        tvProfileStudentId =
-            view.findViewById(R.id.tvProfileStudentId)
-
-        tvProfileEmail =
-            view.findViewById(R.id.tvProfileEmail)
-
-        tvProfileContact =
-            view.findViewById(R.id.tvProfileContact)
-
-        tvProfileYearLevel =
-            view.findViewById(R.id.tvProfileYearLevel)
-
-
-        // =====================================================
-        // MEMBERSHIP CONTAINER
-        // =====================================================
+        ivProfile = view.findViewById(R.id.ivProfile)
+        tvProfileInitials = view.findViewById(R.id.tvProfileInitials)
+        tvProfileName = view.findViewById(R.id.tvProfileName)
+        tvProfileCourse = view.findViewById(R.id.tvProfileCourse)
+        tvProfileStudentId = view.findViewById(R.id.tvProfileStudentId)
+        tvProfileEmail = view.findViewById(R.id.tvProfileEmail)
+        tvProfileContact = view.findViewById(R.id.tvProfileContact)
+        tvProfileYearLevel = view.findViewById(R.id.tvProfileYearLevel)
 
         membershipContainer =
             view.findViewById(R.id.membershipContainer)
 
-
-        // =====================================================
-        // MAKE PROFILE IMAGE CIRCULAR
-        // =====================================================
-
+        // FIX: tinuod nga circle
         ivProfile.shapeAppearanceModel =
             ivProfile.shapeAppearanceModel
                 .toBuilder()
-                .setAllCornerSizes(1000f)
+                .setAllCornerSizes(ShapeAppearanceModel.PILL)
                 .build()
 
+        // FIX: teal circle nga naay initials (fallback)
+        val circle = GradientDrawable(
+            GradientDrawable.Orientation.TL_BR,
+            intArrayOf(
+                Color.parseColor("#2DD4BF"),
+                Color.parseColor("#1FA898")
+            )
+        )
 
-        // =====================================================
-        // LOAD PROFILE
-        // =====================================================
+        circle.shape = GradientDrawable.OVAL
+
+        tvProfileInitials.background = circle
 
         loadStudentProfile()
 
+        listenToOrganizations()
+        listenToMemberships()
 
-        // =====================================================
-        // LOAD APPROVED MEMBERSHIPS
-        // =====================================================
-
-        loadStudentMemberships()
-
-
-        // =====================================================
-        // CHANGE PROFILE PHOTO
-        // =====================================================
-
-        view.findViewById<LinearLayout>(
-            R.id.btnChangePhoto
-        ).setOnClickListener {
-
-            pickImage.launch("image/*")
-        }
-
-
-        // =====================================================
-        // EDIT PROFILE
-        // =====================================================
-
-        view.findViewById<LinearLayout>(
-            R.id.btnEditProfile
-        ).setOnClickListener {
-
-            showEditProfileDialog()
-        }
-
-
-        // =====================================================
-        // LOGOUT
-        // =====================================================
-
-        view.findViewById<LinearLayout>(
-            R.id.btnLogout
-        ).setOnClickListener {
-
-            auth.signOut()
-
-            val intent = Intent(
-                requireContext(),
-                WelcomeActivity::class.java
+        val btnChangePhoto =
+            view.findViewById<LinearLayout>(
+                R.id.btnChangePhoto
             )
 
-            intent.flags =
-                Intent.FLAG_ACTIVITY_NEW_TASK or
-                        Intent.FLAG_ACTIVITY_CLEAR_TASK
+        val btnEditProfile =
+            view.findViewById<LinearLayout>(
+                R.id.btnEditProfile
+            )
 
-            startActivity(intent)
+        val btnLogout =
+            view.findViewById<LinearLayout>(
+                R.id.btnLogout
+            )
+
+        if (viewOnly) {
+
+            // Admin is only viewing the student's profile.
+            btnChangePhoto.visibility =
+                View.GONE
+
+            btnEditProfile.visibility =
+                View.GONE
+
+            btnLogout.visibility =
+                View.GONE
+
+        } else {
+
+            btnChangePhoto.visibility =
+                View.VISIBLE
+
+            btnEditProfile.visibility =
+                View.VISIBLE
+
+            btnLogout.visibility =
+                View.VISIBLE
+
+            btnChangePhoto.setOnClickListener {
+
+                pickImage.launch(
+                    "image/*"
+                )
+            }
+
+            btnEditProfile.setOnClickListener {
+
+                showEditProfileDialog()
+            }
+
+            btnLogout.setOnClickListener {
+
+                auth.signOut()
+
+                val intent =
+                    Intent(
+                        requireContext(),
+                        WelcomeActivity::class.java
+                    )
+
+                intent.flags =
+                    Intent.FLAG_ACTIVITY_NEW_TASK or
+                            Intent.FLAG_ACTIVITY_CLEAR_TASK
+
+                startActivity(
+                    intent
+                )
+            }
         }
-
 
         return view
     }
-
 
     // =========================================================
     // LOAD STUDENT PROFILE
@@ -233,275 +279,365 @@ class ProfileFragment : Fragment() {
 
     private fun loadStudentProfile() {
 
-        val currentUser = auth.currentUser
+        val currentUser =
+            auth.currentUser
 
-        if (currentUser == null) {
-            return
-        }
+        val targetUserId =
+            if (
+                profileUserId.isNotBlank()
+            ) {
 
-        val uid = currentUser.uid
+                profileUserId
 
+            } else {
 
-        db.collection("users")
-            .document(uid)
+                currentUser?.uid
+                    ?: return
+            }
+
+        db.collection(
+            "users"
+        )
+            .document(
+                targetUserId
+            )
             .get()
             .addOnSuccessListener { document ->
 
-                if (!document.exists()) {
+                if (
+                    !isAdded ||
+                    !document.exists()
+                ) {
+
                     return@addOnSuccessListener
                 }
 
-
-                // Full name
                 val fullName =
-                    document.getString("fullName")
+                    document.getString(
+                        "fullName"
+                    )
                         ?: "Student"
 
-
-                // Student ID
                 val studentId =
-                    document.getString("studentId")
+                    document.getString(
+                        "studentId"
+                    )
                         ?: "Not set"
 
-
-                // Course
                 val course =
-                    document.getString("course")
+                    document.getString(
+                        "course"
+                    )
                         ?: "Not set"
 
-
-                // Year level
                 val yearLevel =
-                    document.getString("yearLevel")
+                    document.getString(
+                        "yearLevel"
+                    )
                         ?: "Not set"
 
-
-                // Email
                 val email =
-                    document.getString("email")
-                        ?: currentUser.email
-                        ?: "Not set"
+                    document.getString(
+                        "email"
+                    )
+                        ?.takeIf {
+                            it.isNotBlank()
+                        }
+                        ?: if (
+                            !viewOnly &&
+                            currentUser?.uid ==
+                            targetUserId
+                        ) {
 
+                            currentUser.email
+                                ?: "Not set"
 
-                // Contact
+                        } else {
+
+                            "Not set"
+                        }
+
                 val contact =
-                    document.getString("contactNumber")
+                    document.getString(
+                        "contactNumber"
+                    )
                         ?: "Not set"
 
-
-                // Profile image
                 val profileImageUrl =
-                    document.getString("profileImageUrl")
+                    document.getString(
+                        "profileImageUrl"
+                    )
 
-
-                // =================================================
-                // DISPLAY PROFILE INFORMATION
-                // =================================================
+                // ================================================
+                // BASIC PROFILE
+                // ================================================
 
                 tvProfileName.text =
                     fullName
 
+                tvProfileInitials.text =
+                    getPersonInitials(
+                        fullName
+                    )
 
                 tvProfileCourse.text =
                     "$course · BISU Balilihan Campus"
 
-
                 tvProfileStudentId.text =
                     "Student ID: $studentId"
-
 
                 tvProfileEmail.text =
                     email
 
-
                 tvProfileContact.text =
                     contact
-
 
                 tvProfileYearLevel.text =
                     yearLevel
 
+                // ================================================
+                // PROFILE PICTURE
+                // ================================================
 
-                // =================================================
-                // LOAD PROFILE IMAGE
-                // =================================================
+                if (
+                    !profileImageUrl.isNullOrBlank()
+                ) {
 
-                if (!profileImageUrl.isNullOrEmpty()) {
+                    tvProfileInitials.visibility =
+                        View.GONE
 
-                    Glide.with(this)
-                        .load(profileImageUrl)
-                        .placeholder(
-                            R.drawable.bg_profile_avatar
+                    ivProfile.visibility =
+                        View.VISIBLE
+
+                    Glide.with(
+                        this
+                    )
+                        .load(
+                            profileImageUrl
                         )
+                        .circleCrop()
                         .error(
-                            R.drawable.bg_profile_avatar
+                            android.R.color.transparent
                         )
-                        .into(ivProfile)
+                        .into(
+                            ivProfile
+                        )
+
+                } else {
+
+                    Glide.with(
+                        this
+                    )
+                        .clear(
+                            ivProfile
+                        )
+
+                    ivProfile.setImageDrawable(
+                        null
+                    )
+
+                    ivProfile.visibility =
+                        View.GONE
+
+                    tvProfileInitials.visibility =
+                        View.VISIBLE
                 }
             }
             .addOnFailureListener {
 
+                if (!isAdded) {
+                    return@addOnFailureListener
+                }
+
                 Toast.makeText(
                     requireContext(),
-                    "Unable to load profile information.",
+                    "Unable to load student profile information.",
                     Toast.LENGTH_SHORT
                 ).show()
             }
     }
 
+    private fun getPersonInitials(
+        fullName: String
+    ): String {
+
+        val parts =
+            fullName.trim()
+                .split(Regex("\\s+"))
+                .filter { it.isNotEmpty() }
+
+        return when {
+            parts.size >= 2 ->
+                "${parts[0].first()}${parts[1].first()}"
+            parts.size == 1 ->
+                parts[0].take(2)
+            else -> "ST"
+        }.uppercase()
+    }
 
     // =========================================================
-    // LOAD STUDENT MEMBERSHIPS
+    // FIX: VALID ORGANIZATIONS
     // =========================================================
 
-    private fun loadStudentMemberships() {
+    private fun listenToOrganizations() {
 
-        val currentUser = auth.currentUser
+        organizationsListener?.remove()
 
-        if (currentUser == null) {
+        organizationsListener =
+            db.collection("organizations")
+                .addSnapshotListener { snapshot, error ->
+
+                    if (!isAdded || error != null || snapshot == null) {
+                        return@addSnapshotListener
+                    }
+
+                    validOrganizationIds.clear()
+
+                    snapshot.documents.forEach {
+                        validOrganizationIds.add(it.id)
+                    }
+
+                    renderMemberships()
+                }
+    }
+
+    // =========================================================
+    // LISTEN TO APPROVED MEMBERSHIPS (REAL-TIME)
+    // =========================================================
+
+    private fun listenToMemberships() {
+
+        val targetUserId =
+            if (
+                profileUserId.isNotBlank()
+            ) {
+
+                profileUserId
+
+            } else {
+
+                auth.currentUser?.uid
+                    ?: return
+            }
+
+        membershipsListener?.remove()
+
+        membershipsListener =
+            db.collection(
+                "memberships"
+            )
+                .whereEqualTo(
+                    "studentId",
+                    targetUserId
+                )
+                .addSnapshotListener { result, error ->
+
+                    if (!isAdded) {
+                        return@addSnapshotListener
+                    }
+
+                    if (
+                        error != null
+                    ) {
+
+                        Toast.makeText(
+                            requireContext(),
+                            "Unable to load memberships.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                        return@addSnapshotListener
+                    }
+
+                    membershipDocs =
+                        result?.documents
+                            ?: emptyList()
+
+                    renderMemberships()
+                }
+    }
+
+    // =========================================================
+    // FIX: RENDER (approved + tinuod nga organization ra, max 3)
+    // =========================================================
+
+    private fun renderMemberships() {
+
+        if (!isAdded) {
             return
         }
 
-        val uid = currentUser.uid
-
-
-        // Clear old membership cards
         membershipContainer.removeAllViews()
 
-
-        db.collection("memberships")
-            .whereEqualTo("studentId", uid)
-            .whereEqualTo("status", "approved")
-            .get()
-            .addOnSuccessListener { result ->
-
-                // Clear again before displaying
-                membershipContainer.removeAllViews()
-
-
-                // =================================================
-                // NO APPROVED MEMBERSHIPS
-                // =================================================
-
-                if (result.isEmpty) {
-
-                    val emptyText =
-                        TextView(requireContext())
-
-
-                    emptyText.text =
-                        "You are not yet a member of any organization."
-
-
-                    emptyText.setTextColor(
-                        resources.getColor(
-                            R.color.text_gray,
-                            null
-                        )
-                    )
-
-
-                    emptyText.textSize =
-                        12f
-
-
-                    emptyText.setPadding(
-                        12.dp(),
-                        12.dp(),
-                        12.dp(),
-                        18.dp()
-                    )
-
-
-                    membershipContainer.addView(
-                        emptyText
-                    )
-
-
-                    return@addOnSuccessListener
+        val approvedMemberships =
+            membershipDocs
+                .filter {
+                    it.getString("status") == "approved" &&
+                            validOrganizationIds.contains(
+                                it.getString("organizationId") ?: ""
+                            )
                 }
-
-
-                // =================================================
-                // DISPLAY APPROVED MEMBERSHIPS
-                // =================================================
-
-                for (document in result) {
-
-                    val organizationName =
-                        document.getString(
-                            "organizationName"
-                        ) ?: "Organization"
-
-
-                    val shortCode =
-                        document.getString(
-                            "shortCode"
-                        ) ?: "ORG"
-
-
-                    val dateApplied =
-                        document.getTimestamp(
-                            "dateApplied"
-                        )
-
-
-                    addMembershipCard(
-                        organizationName,
-                        shortCode,
-                        dateApplied
-                    )
+                .sortedBy {
+                    it.getTimestamp("approvedAt")
+                        ?.toDate()?.time ?: 0L
                 }
-            }
-            .addOnFailureListener {
+                .take(maxOrganizations)
 
-                Toast.makeText(
-                    requireContext(),
-                    "Unable to load memberships.",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+        if (approvedMemberships.isEmpty()) {
+
+            val emptyText = TextView(requireContext())
+
+            emptyText.text =
+                "You are not yet a member of any organization."
+
+            emptyText.setTextColor(
+                resources.getColor(R.color.text_gray, null)
+            )
+
+            emptyText.textSize = 12f
+
+            emptyText.setPadding(
+                12.dp(), 12.dp(), 12.dp(), 18.dp()
+            )
+
+            membershipContainer.addView(emptyText)
+
+            return
+        }
+
+        for (document in approvedMemberships) {
+            addMembershipCard(document)
+        }
     }
-
 
     // =========================================================
     // CREATE MEMBERSHIP CARD
     // =========================================================
 
     private fun addMembershipCard(
-        organizationName: String,
-        shortCode: String,
-        dateApplied: Timestamp?
+        document: DocumentSnapshot
     ) {
 
-        // =====================================================
-        // CARD
-        // =====================================================
+        val organizationId =
+            document.getString("organizationId") ?: ""
 
-        val card =
-            LinearLayout(requireContext())
+        val organizationName =
+            document.getString("organizationName") ?: "Organization"
 
+        val shortCode =
+            document.getString("shortCode")
+                ?.takeIf { it.isNotBlank() }
+                ?: getInitials(organizationName)
 
-        card.orientation =
-            LinearLayout.HORIZONTAL
+        val approvedAt: Timestamp? =
+            document.getTimestamp("approvedAt")
 
+        val card = LinearLayout(requireContext())
 
-        card.gravity =
-            Gravity.CENTER_VERTICAL
-
-
-        card.setBackgroundResource(
-            R.drawable.bg_card
-        )
-
-
-        card.setPadding(
-            12.dp(),
-            12.dp(),
-            12.dp(),
-            12.dp()
-        )
-
+        card.orientation = LinearLayout.HORIZONTAL
+        card.gravity = Gravity.CENTER_VERTICAL
+        card.setBackgroundResource(R.drawable.bg_card)
+        card.setPadding(12.dp(), 12.dp(), 12.dp(), 12.dp())
 
         val cardParams =
             LinearLayout.LayoutParams(
@@ -509,82 +645,48 @@ class ProfileFragment : Fragment() {
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
 
+        cardParams.setMargins(0, 0, 0, 9.dp())
 
-        cardParams.setMargins(
-            0,
-            0,
-            0,
-            9.dp()
-        )
+        card.layoutParams = cardParams
 
+        card.isClickable = true
+        card.isFocusable = true
 
-        card.layoutParams =
-            cardParams
+        card.setOnClickListener {
 
-
-        // =====================================================
-        // ORGANIZATION AVATAR
-        // =====================================================
-
-        val avatar =
-            TextView(requireContext())
-
-
-        val avatarParams =
-            LinearLayout.LayoutParams(
-                36.dp(),
-                36.dp()
+            val intent = Intent(
+                requireContext(),
+                OrganizationProfileActivity::class.java
             )
 
+            intent.putExtra("organizationId", organizationId)
+            intent.putExtra("organizationName", organizationName)
+            intent.putExtra("shortCode", shortCode)
+
+            startActivity(intent)
+        }
+
+        val avatar = TextView(requireContext())
 
         avatar.layoutParams =
-            avatarParams
+            LinearLayout.LayoutParams(36.dp(), 36.dp())
 
-
-        avatar.gravity =
-            Gravity.CENTER
-
-
-        avatar.text =
-            shortCode
-                .take(4)
-                .uppercase()
-
+        avatar.gravity = Gravity.CENTER
+        avatar.text = shortCode.take(4).uppercase()
 
         avatar.setTextColor(
-            resources.getColor(
-                R.color.white,
-                null
-            )
+            resources.getColor(R.color.white, null)
         )
 
+        avatar.textSize = 9f
 
-        avatar.textSize =
-            9f
+        avatar.setTypeface(null, android.graphics.Typeface.BOLD)
 
+        avatar.setBackgroundResource(R.drawable.bg_oc_avatar_teal)
 
-        avatar.setTypeface(
-            null,
-            android.graphics.Typeface.BOLD
-        )
+        val info = LinearLayout(requireContext())
 
-
-        avatar.setBackgroundResource(
-            R.drawable.bg_oc_avatar_teal
-        )
-
-
-        // =====================================================
-        // ORGANIZATION INFORMATION CONTAINER
-        // =====================================================
-
-        val info =
-            LinearLayout(requireContext())
-
-
-        info.orientation =
-            LinearLayout.VERTICAL
-
+        info.orientation = LinearLayout.VERTICAL
 
         val infoParams =
             LinearLayout.LayoutParams(
@@ -593,126 +695,72 @@ class ProfileFragment : Fragment() {
                 1f
             )
 
+        infoParams.setMargins(11.dp(), 0, 0, 0)
 
-        infoParams.setMargins(
-            11.dp(),
-            0,
-            0,
-            0
-        )
+        info.layoutParams = infoParams
 
+        val name = TextView(requireContext())
 
-        info.layoutParams =
-            infoParams
-
-
-        // =====================================================
-        // ORGANIZATION NAME
-        // =====================================================
-
-        val name =
-            TextView(requireContext())
-
-
-        name.text =
-            organizationName
-
+        name.text = organizationName
 
         name.setTextColor(
-            resources.getColor(
-                R.color.dark_blue,
-                null
-            )
+            resources.getColor(R.color.dark_blue, null)
         )
 
+        name.textSize = 12.5f
 
-        name.textSize =
-            12.5f
+        name.setTypeface(null, android.graphics.Typeface.BOLD)
 
-
-        name.setTypeface(
-            null,
-            android.graphics.Typeface.BOLD
-        )
-
-
-        // =====================================================
-        // MEMBERSHIP DATE
-        // =====================================================
-
-        val details =
-            TextView(requireContext())
-
-
-        val dateText: String
-
-
-        if (dateApplied != null) {
-
-            val dateFormat =
-                SimpleDateFormat(
-                    "MMMM yyyy",
-                    Locale.getDefault()
-                )
-
-
-            val formattedDate =
-                dateFormat.format(
-                    dateApplied.toDate()
-                )
-
-
-            dateText =
-                "Member since $formattedDate"
-
-        } else {
-
-            dateText =
-                "Active member"
-        }
-
+        val details = TextView(requireContext())
 
         details.text =
-            dateText
+            if (approvedAt != null) {
 
+                val formattedDate =
+                    SimpleDateFormat(
+                        "MMMM yyyy",
+                        Locale.getDefault()
+                    ).format(approvedAt.toDate())
+
+                "Member since $formattedDate"
+
+            } else {
+                "Active member"
+            }
 
         details.setTextColor(
-            resources.getColor(
-                R.color.text_gray,
-                null
-            )
+            resources.getColor(R.color.text_gray, null)
         )
 
-
-        details.textSize =
-            10.5f
-
-
-        // =====================================================
-        // ADD TEXTS TO INFO
-        // =====================================================
+        details.textSize = 10.5f
 
         info.addView(name)
-
         info.addView(details)
 
-
-        // =====================================================
-        // ADD EVERYTHING TO CARD
-        // =====================================================
-
         card.addView(avatar)
-
         card.addView(info)
-
-
-        // =====================================================
-        // ADD CARD TO MEMBERSHIP CONTAINER
-        // =====================================================
 
         membershipContainer.addView(card)
     }
 
+    private fun getInitials(
+        name: String
+    ): String {
+
+        val words =
+            name.trim()
+                .split(Regex("\\s+"))
+                .filter { it.isNotBlank() }
+
+        return when {
+            words.isEmpty() -> "ORG"
+            words.size == 1 -> words[0].take(3).uppercase()
+            else -> words.take(3)
+                .map { it.first() }
+                .joinToString("")
+                .uppercase()
+        }
+    }
 
     // =========================================================
     // EDIT PROFILE
@@ -720,364 +768,157 @@ class ProfileFragment : Fragment() {
 
     private fun showEditProfileDialog() {
 
-        val currentUser = auth.currentUser
-
-        if (currentUser == null) {
-            return
-        }
+        val currentUser = auth.currentUser ?: return
 
         val uid = currentUser.uid
 
-
-        // Get current values from Firestore
         db.collection("users")
             .document(uid)
             .get()
             .addOnSuccessListener { document ->
 
-                if (!document.exists()) {
+                if (!isAdded || !document.exists()) {
                     return@addOnSuccessListener
                 }
 
+                val layout = LinearLayout(requireContext())
 
-                val fullName =
-                    document.getString("fullName")
-                        ?: ""
+                layout.orientation = LinearLayout.VERTICAL
+                layout.setPadding(45, 10, 45, 10)
 
+                fun field(
+                    hint: String,
+                    value: String
+                ): EditText {
 
-                val studentId =
-                    document.getString("studentId")
-                        ?: ""
+                    val editText = EditText(requireContext())
 
+                    editText.hint = hint
+                    editText.setText(value)
 
-                val course =
-                    document.getString("course")
-                        ?: ""
+                    layout.addView(editText)
 
-
-                val yearLevel =
-                    document.getString("yearLevel")
-                        ?: ""
-
-
-                val interest =
-                    document.getString("interest")
-                        ?: ""
-
-
-                val contact =
-                    document.getString("contactNumber")
-                        ?: ""
-
-
-                // =================================================
-                // DIALOG LAYOUT
-                // =================================================
-
-                val layout =
-                    LinearLayout(requireContext())
-
-
-                layout.orientation =
-                    LinearLayout.VERTICAL
-
-
-                layout.setPadding(
-                    45,
-                    10,
-                    45,
-                    10
-                )
-
-
-                // =================================================
-                // FULL NAME
-                // =================================================
+                    return editText
+                }
 
                 val etFullName =
-                    EditText(requireContext())
-
-
-                etFullName.hint =
-                    "Full Name"
-
-
-                etFullName.setText(
-                    fullName
-                )
-
-
-                // =================================================
-                // STUDENT ID
-                // =================================================
+                    field("Full Name", document.getString("fullName") ?: "")
 
                 val etStudentId =
-                    EditText(requireContext())
-
-
-                etStudentId.hint =
-                    "Student ID"
-
-
-                etStudentId.setText(
-                    studentId
-                )
-
-
-                // =================================================
-                // COURSE
-                // =================================================
+                    field("Student ID", document.getString("studentId") ?: "")
 
                 val etCourse =
-                    EditText(requireContext())
-
-
-                etCourse.hint =
-                    "Course"
-
-
-                etCourse.setText(
-                    course
-                )
-
-
-                // =================================================
-                // YEAR LEVEL
-                // =================================================
+                    field("Course", document.getString("course") ?: "")
 
                 val etYearLevel =
-                    EditText(requireContext())
-
-
-                etYearLevel.hint =
-                    "Year Level"
-
-
-                etYearLevel.setText(
-                    yearLevel
-                )
-
-
-                // =================================================
-                // INTEREST
-                // =================================================
+                    field("Year Level", document.getString("yearLevel") ?: "")
 
                 val etInterest =
-                    EditText(requireContext())
-
-
-                etInterest.hint =
-                    "Interest"
-
-
-                etInterest.setText(
-                    interest
-                )
-
-
-                // =================================================
-                // CONTACT NUMBER
-                // =================================================
+                    field("Interest", document.getString("interest") ?: "")
 
                 val etContact =
-                    EditText(requireContext())
+                    field("Contact Number", document.getString("contactNumber") ?: "")
 
-
-                etContact.hint =
-                    "Contact Number"
-
-
-                etContact.setText(
-                    contact
-                )
-
-
-                etContact.inputType =
-                    InputType.TYPE_CLASS_PHONE
-
-
-                // =================================================
-                // ADD FIELDS
-                // =================================================
-
-                layout.addView(
-                    etFullName
-                )
-
-                layout.addView(
-                    etStudentId
-                )
-
-                layout.addView(
-                    etCourse
-                )
-
-                layout.addView(
-                    etYearLevel
-                )
-
-                layout.addView(
-                    etInterest
-                )
-
-                layout.addView(
-                    etContact
-                )
-
-
-                // =================================================
-                // CREATE DIALOG
-                // =================================================
+                etContact.inputType = InputType.TYPE_CLASS_PHONE
 
                 val dialog =
-                    AlertDialog.Builder(
-                        requireContext()
-                    )
+                    AlertDialog.Builder(requireContext())
                         .setTitle("Edit Profile")
                         .setView(layout)
-                        .setNegativeButton(
-                            "Cancel",
-                            null
-                        )
-                        .setPositiveButton(
-                            "Save",
-                            null
-                        )
+                        .setNegativeButton("Cancel", null)
+                        .setPositiveButton("Save", null)
                         .create()
-
-
-                // =================================================
-                // SAVE BUTTON
-                // =================================================
 
                 dialog.setOnShowListener {
 
-                    dialog.getButton(
-                        AlertDialog.BUTTON_POSITIVE
-                    ).setOnClickListener {
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                        .setOnClickListener {
 
-                        val updatedName =
-                            etFullName.text
-                                .toString()
-                                .trim()
+                            val updatedName =
+                                etFullName.text.toString().trim()
 
+                            val updatedStudentId =
+                                etStudentId.text.toString().trim()
 
-                        val updatedStudentId =
-                            etStudentId.text
-                                .toString()
-                                .trim()
+                            val updatedCourse =
+                                etCourse.text.toString().trim()
 
+                            val updatedYearLevel =
+                                etYearLevel.text.toString().trim()
 
-                        val updatedCourse =
-                            etCourse.text
-                                .toString()
-                                .trim()
+                            val updatedInterest =
+                                etInterest.text.toString().trim()
 
+                            val updatedContact =
+                                etContact.text.toString().trim()
 
-                        val updatedYearLevel =
-                            etYearLevel.text
-                                .toString()
-                                .trim()
+                            if (
+                                updatedName.isEmpty() ||
+                                updatedStudentId.isEmpty() ||
+                                updatedCourse.isEmpty() ||
+                                updatedYearLevel.isEmpty()
+                            ) {
 
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Please fill in the required fields.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
 
-                        val updatedInterest =
-                            etInterest.text
-                                .toString()
-                                .trim()
+                                return@setOnClickListener
+                            }
 
+                            val updates =
+                                hashMapOf<String, Any>(
+                                    "fullName" to updatedName,
+                                    "studentId" to updatedStudentId,
+                                    "course" to updatedCourse,
+                                    "yearLevel" to updatedYearLevel,
+                                    "interest" to updatedInterest,
+                                    "contactNumber" to updatedContact
+                                )
 
-                        val updatedContact =
-                            etContact.text
-                                .toString()
-                                .trim()
+                            db.collection("users")
+                                .document(uid)
+                                .update(updates)
+                                .addOnSuccessListener {
 
+                                    if (!isAdded) {
+                                        return@addOnSuccessListener
+                                    }
 
-                        // =================================================
-                        // VALIDATION
-                        // =================================================
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "Profile updated successfully!",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
 
-                        if (
-                            updatedName.isEmpty() ||
-                            updatedStudentId.isEmpty() ||
-                            updatedCourse.isEmpty() ||
-                            updatedYearLevel.isEmpty()
-                        ) {
+                                    loadStudentProfile()
 
-                            Toast.makeText(
-                                requireContext(),
-                                "Please fill in the required fields.",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                                    dialog.dismiss()
+                                }
+                                .addOnFailureListener {
 
+                                    if (!isAdded) {
+                                        return@addOnFailureListener
+                                    }
 
-                            return@setOnClickListener
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "Failed to update profile.",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
                         }
-
-
-                        // =================================================
-                        // UPDATED DATA
-                        // =================================================
-
-                        val updates =
-                            hashMapOf<String, Any>(
-
-                                "fullName" to
-                                        updatedName,
-
-                                "studentId" to
-                                        updatedStudentId,
-
-                                "course" to
-                                        updatedCourse,
-
-                                "yearLevel" to
-                                        updatedYearLevel,
-
-                                "interest" to
-                                        updatedInterest,
-
-                                "contactNumber" to
-                                        updatedContact
-                            )
-
-
-                        // =================================================
-                        // UPDATE FIRESTORE
-                        // =================================================
-
-                        db.collection("users")
-                            .document(uid)
-                            .update(updates)
-                            .addOnSuccessListener {
-
-                                Toast.makeText(
-                                    requireContext(),
-                                    "Profile updated successfully!",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-
-
-                                // Refresh profile
-                                loadStudentProfile()
-
-
-                                dialog.dismiss()
-                            }
-                            .addOnFailureListener {
-
-                                Toast.makeText(
-                                    requireContext(),
-                                    "Failed to update profile.",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                    }
                 }
-
 
                 dialog.show()
             }
             .addOnFailureListener {
+
+                if (!isAdded) {
+                    return@addOnFailureListener
+                }
 
                 Toast.makeText(
                     requireContext(),
@@ -1087,27 +928,17 @@ class ProfileFragment : Fragment() {
             }
     }
 
-
     // =========================================================
-    // UPLOAD PROFILE PICTURE
+    // UPLOAD PROFILE PICTURE (CLOUDINARY)
     // =========================================================
 
     private fun uploadProfilePicture(
         uri: Uri
     ) {
 
-        val currentUser =
-            auth.currentUser
+        val currentUser = auth.currentUser ?: return
 
-
-        if (currentUser == null) {
-            return
-        }
-
-
-        val uid =
-            currentUser.uid
-
+        val uid = currentUser.uid
 
         Toast.makeText(
             requireContext(),
@@ -1115,70 +946,105 @@ class ProfileFragment : Fragment() {
             Toast.LENGTH_SHORT
         ).show()
 
+        MediaManager.get()
+            .upload(uri)
+            .unsigned("kayara_upload")
+            .option("folder", "kayara/profiles/$uid")
+            .callback(
+                object : UploadCallback {
 
-        // =====================================================
-        // FIREBASE STORAGE LOCATION
-        // =====================================================
+                    override fun onStart(requestId: String?) {}
 
-        val imageRef =
-            storage.reference
-                .child("profilePictures")
-                .child("$uid.jpg")
-
-
-        // =====================================================
-        // UPLOAD IMAGE
-        // =====================================================
-
-        imageRef.putFile(uri)
-            .addOnSuccessListener {
-
-                // Get download URL
-                imageRef.downloadUrl
-                    .addOnSuccessListener { downloadUri ->
-
-                        // =================================================
-                        // SAVE URL TO FIRESTORE
-                        // =================================================
-
-                        db.collection("users")
-                            .document(uid)
-                            .update(
-                                "profileImageUrl",
-                                downloadUri.toString()
-                            )
-                            .addOnSuccessListener {
-
-                                Toast.makeText(
-                                    requireContext(),
-                                    "Profile picture updated!",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                            .addOnFailureListener {
-
-                                Toast.makeText(
-                                    requireContext(),
-                                    "Picture uploaded but profile was not updated.",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
+                    override fun onProgress(
+                        requestId: String?,
+                        bytes: Long,
+                        totalBytes: Long
+                    ) {
                     }
-            }
-            .addOnFailureListener {
 
-                Toast.makeText(
-                    requireContext(),
-                    "Failed to upload profile picture.",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+                    override fun onSuccess(
+                        requestId: String?,
+                        resultData: Map<*, *>?
+                    ) {
+
+                        val secureUrl =
+                            resultData?.get("secure_url")?.toString()
+
+                        activity?.runOnUiThread {
+
+                            if (!isAdded) {
+                                return@runOnUiThread
+                            }
+
+                            if (secureUrl.isNullOrBlank()) {
+
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Failed to upload profile picture.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+
+                                return@runOnUiThread
+                            }
+
+                            db.collection("users")
+                                .document(uid)
+                                .update("profileImageUrl", secureUrl)
+                                .addOnSuccessListener {
+
+                                    if (!isAdded) {
+                                        return@addOnSuccessListener
+                                    }
+
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "Profile picture updated!",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                                .addOnFailureListener {
+
+                                    if (!isAdded) {
+                                        return@addOnFailureListener
+                                    }
+
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "Picture uploaded but profile was not updated.",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                        }
+                    }
+
+                    override fun onError(
+                        requestId: String?,
+                        error: ErrorInfo?
+                    ) {
+
+                        activity?.runOnUiThread {
+
+                            if (!isAdded) {
+                                return@runOnUiThread
+                            }
+
+                            Toast.makeText(
+                                requireContext(),
+                                "Failed to upload: ${error?.description ?: "Unknown error"}",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
+
+                    override fun onReschedule(
+                        requestId: String?,
+                        error: ErrorInfo?
+                    ) {
+                    }
+                }
+            )
+            .dispatch()
     }
-
-
-    // =========================================================
-    // DP HELPER
-    // =========================================================
 
     private fun Int.dp(): Int {
 
@@ -1186,5 +1052,20 @@ class ProfileFragment : Fragment() {
                 this *
                         resources.displayMetrics.density
                 ).toInt()
+    }
+
+    // =========================================================
+    // CLEANUP
+    // =========================================================
+
+    override fun onDestroyView() {
+
+        membershipsListener?.remove()
+        membershipsListener = null
+
+        organizationsListener?.remove()
+        organizationsListener = null
+
+        super.onDestroyView()
     }
 }

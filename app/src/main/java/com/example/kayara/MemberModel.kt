@@ -8,5 +8,17 @@ data class MemberModel(
     val avatarColorEnd: String = "#2A4E92",
     val applicationNote: String = "",
     val membershipId: String = "",
-    val organizationName: String = ""
+    val organizationName: String = "",
+
+    // Officer position (President, Vice President, etc.)
+    val position: String = "",
+
+    // Profile picture sa student (users/{uid}.profileImageUrl)
+    val avatarUrl: String = "",
+
+    // Documents nga gi-submit sa student kung nag-apply
+    val documents: List<SubmittedDocument> = emptyList(),
+
+    // UID sa student (users/{studentId})
+    val studentId: String = ""
 )

@@ -1,310 +1,245 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F4FAF9"
+    android:background="#EEF9F8"
+    android:fillViewport="true"
+    android:scrollbars="none"
     tools:context=".StudentLoginActivity">
 
-    <!-- TOP TEAL HEADER -->
     <LinearLayout
-        android:id="@+id/headerSection"
-        android:layout_width="408dp"
-        android:layout_height="206dp"
-        android:background="#159A98"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingTop="25dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <!-- BACK BUTTON -->
-        <ImageView
-            android:id="@+id/btnBack"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_gravity="start"
-            android:layout_marginStart="22dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:contentDescription="Back"
-            android:focusable="true"
-            android:padding="9dp"
-            android:src="@drawable/ic_back_arrow"
-            app:tint="@android:color/white" />
-
-        <!-- HEADER TITLE -->
-        <TextView
-            android:id="@+id/tvWelcome"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
-            android:text="Welcome Back"
-            android:textColor="@android:color/white"
-            android:textSize="29sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tvSubtitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:text="Sign in to continue to your BBCO account"
-            android:textColor="#DDF4F2"
-            android:textSize="13sp" />
-
-    </LinearLayout>
-
-
-    <!-- LOGIN CARD -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/loginCard"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:translationY="35dp"
-        app:cardBackgroundColor="@android:color/white"
-        app:cardCornerRadius="26dp"
-        app:cardElevation="7dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/headerSection">
+        android:orientation="vertical">
 
-        <LinearLayout
+        <!-- HEADER -->
+        <FrameLayout
+            android:id="@+id/headerSection"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingStart="24dp"
-            android:paddingTop="27dp"
-            android:paddingEnd="24dp"
-            android:paddingBottom="28dp">
+            android:layout_height="291dp"
+            android:background="@drawable/bg_v2_header_student"
+            android:clipChildren="true">
 
-            <!-- SECTION TITLE -->
+            <View
+                android:layout_width="190dp"
+                android:layout_height="190dp"
+                android:layout_gravity="end|top"
+                android:layout_marginTop="-60dp"
+                android:layout_marginEnd="-50dp"
+                android:background="@drawable/bg_v2_deco_circle" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="STUDENT LOGIN"
-                android:textColor="#117E7C"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.12" />
+            <View
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:layout_gravity="start|bottom"
+                android:layout_marginStart="-40dp"
+                android:layout_marginBottom="50dp"
+                android:background="@drawable/bg_v2_deco_circle" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="Enter your account details below"
-                android:textColor="#8A9998"
-                android:textSize="12sp" />
-
-
-            <!-- EMAIL FIELD -->
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="17dp"
-                android:background="@drawable/bg_pill_input_teal"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingStart="15dp"
-                android:paddingEnd="15dp">
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:contentDescription="Email"
-                    android:src="@drawable/ic_person"
-                    app:tint="#159A98" />
-
-                <EditText
-                    android:id="@+id/etUsername"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="12dp"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:hint="BISU Email"
-                    android:inputType="textEmailAddress"
-                    android:padding="0dp"
-                    android:singleLine="true"
-                    android:textColor="#244442"
-                    android:textColorHint="#91A2A0"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
-
-
-            <!-- PASSWORD FIELD -->
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/bg_pill_input_teal"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingStart="15dp"
-                android:paddingEnd="7dp">
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:contentDescription="Password"
-                    android:src="@drawable/ic_lock"
-                    app:tint="#159A98" />
-
-                <EditText
-                    android:id="@+id/etPassword"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="12dp"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:hint="Password"
-                    android:inputType="textPassword"
-                    android:padding="0dp"
-                    android:singleLine="true"
-                    android:textColor="#244442"
-                    android:textColorHint="#91A2A0"
-                    android:textSize="14sp" />
-
-                <ImageView
-                    android:id="@+id/btnTogglePassword"
-                    android:layout_width="42dp"
-                    android:layout_height="42dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:clickable="true"
-                    android:contentDescription="Show or hide password"
-                    android:focusable="true"
-                    android:padding="10dp"
-                    android:src="@drawable/ic_eye"
-                    app:tint="#159A98" />
-
-            </LinearLayout>
-
-
-            <!-- ERROR MESSAGE -->
-
-            <TextView
-                android:id="@+id/tvError"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="11dp"
-                android:background="#FFF3F3"
-                android:padding="10dp"
-                android:textColor="#C62828"
-                android:textSize="12sp"
-                android:visibility="gone"
-                tools:text="Invalid username or password"
-                tools:visibility="visible" />
-
-
-            <!-- LOGIN BUTTON -->
-
-            <LinearLayout
-                android:id="@+id/btnLogin"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="18dp"
-                android:background="#159A98"
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginStart="22dp"
+                android:layout_marginTop="25dp"
+                android:background="@drawable/bg_header_icon_btn"
                 android:clickable="true"
+                android:contentDescription="Back"
+                android:elevation="3dp"
                 android:focusable="true"
-                android:gravity="center"
-                android:orientation="horizontal">
+                android:padding="11dp"
+                android:src="@drawable/ic_back_arrow"
+                app:tint="#2A9D95" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center_horizontal"
+                android:layout_marginTop="62dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:layout_width="76dp"
+                    android:layout_height="76dp"
+                    android:background="@drawable/bg_auth_deco_circle"
+                    android:elevation="6dp">
+
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_grad_cap"
+                        app:tint="#2A9D95" />
+                </FrameLayout>
 
                 <TextView
+                    android:id="@+id/tvWelcome"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="SIGN IN"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:letterSpacing="0.08" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="9dp"
-                    android:text="→"
-                    android:textColor="@android:color/white"
-                    android:textSize="20sp"
+                    android:layout_marginTop="14dp"
+                    android:text="Welcome Back"
+                    android:textColor="#FFFFFF"
+                    android:textSize="27sp"
                     android:textStyle="bold" />
 
-            </LinearLayout>
-
-
-            <!-- DIVIDER -->
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="22dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1"
-                    android:background="#E0E9E8" />
-
                 <TextView
+                    android:id="@+id/tvSubtitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginEnd="12dp"
-                    android:text="New to BBCO?"
-                    android:textColor="#8A9998"
-                    android:textSize="11sp" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1"
-                    android:background="#E0E9E8" />
-
+                    android:layout_marginTop="4dp"
+                    android:text="Sign in to continue to your BBCO account"
+                    android:textColor="#F0FFFD"
+                    android:textSize="12.5sp" />
             </LinearLayout>
+        </FrameLayout>
 
+        <!-- LOGIN CARD -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/loginCard"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginStart="20dp" android:layout_marginTop="-64dp" android:layout_marginEnd="20dp"
+            app:cardBackgroundColor="#FFFFFF" app:cardCornerRadius="28dp" app:cardElevation="8dp">
 
-            <!-- SIGN UP -->
+            <LinearLayout
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="22dp" android:paddingTop="26dp"
+                android:paddingEnd="22dp" android:paddingBottom="26dp">
 
-            <TextView
-                android:id="@+id/tvGoToSignUp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="13dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:text="Create a Student Account"
-                android:textColor="#117E7C"
-                android:textSize="13sp"
-                android:textStyle="bold" />
+                <LinearLayout
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:gravity="center_vertical" android:orientation="horizontal">
+                    <View android:layout_width="4dp" android:layout_height="14dp"
+                        android:background="@drawable/bg_v2_accent_teal" />
+                    <TextView
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp" android:letterSpacing="0.1"
+                        android:text="STUDENT LOGIN" android:textColor="#2A9D95"
+                        android:textSize="11sp" android:textStyle="bold" />
+                </LinearLayout>
 
-        </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp" android:text="Enter your account details below"
+                    android:textColor="#6F8E8B" android:textSize="12sp" />
 
-    </androidx.cardview.widget.CardView>
+                <!-- Email -->
+                <LinearLayout
+                    android:layout_width="match_parent" android:layout_height="58dp"
+                    android:layout_marginTop="18dp" android:background="@drawable/bg_v2_input_teal"
+                    android:gravity="center_vertical" android:orientation="horizontal"
+                    android:paddingStart="11dp" android:paddingEnd="14dp">
+                    <FrameLayout
+                        android:layout_width="36dp" android:layout_height="36dp"
+                        android:background="@drawable/bg_v2_icon_teal">
+                        <ImageView
+                            android:layout_width="18dp" android:layout_height="18dp"
+                            android:layout_gravity="center" android:contentDescription="Email"
+                            android:src="@drawable/ic_person" app:tint="#2A9D95" />
+                    </FrameLayout>
+                    <EditText
+                        android:id="@+id/etUsername"
+                        android:layout_width="0dp" android:layout_height="match_parent"
+                        android:layout_marginStart="12dp" android:layout_weight="1"
+                        android:background="@android:color/transparent" android:hint="BISU Email"
+                        android:inputType="textEmailAddress" android:padding="0dp" android:singleLine="true"
+                        android:textColor="#17413F" android:textColorHint="#7FA9A5" android:textSize="14sp" />
+                </LinearLayout>
 
+                <!-- Password -->
+                <LinearLayout
+                    android:layout_width="match_parent" android:layout_height="58dp"
+                    android:layout_marginTop="12dp" android:background="@drawable/bg_v2_input_teal"
+                    android:gravity="center_vertical" android:orientation="horizontal"
+                    android:paddingStart="11dp" android:paddingEnd="6dp">
+                    <FrameLayout
+                        android:layout_width="36dp" android:layout_height="36dp"
+                        android:background="@drawable/bg_v2_icon_teal">
+                        <ImageView
+                            android:layout_width="18dp" android:layout_height="18dp"
+                            android:layout_gravity="center" android:contentDescription="Password"
+                            android:src="@drawable/ic_lock" app:tint="#2A9D95" />
+                    </FrameLayout>
+                    <EditText
+                        android:id="@+id/etPassword"
+                        android:layout_width="0dp" android:layout_height="match_parent"
+                        android:layout_marginStart="12dp" android:layout_weight="1"
+                        android:background="@android:color/transparent" android:hint="Password"
+                        android:inputType="textPassword" android:padding="0dp" android:singleLine="true"
+                        android:textColor="#17413F" android:textColorHint="#7FA9A5" android:textSize="14sp" />
+                    <ImageView
+                        android:id="@+id/btnTogglePassword"
+                        android:layout_width="42dp" android:layout_height="42dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:clickable="true" android:focusable="true" android:padding="10dp"
+                        android:contentDescription="Show or hide password"
+                        android:src="@drawable/ic_eye" app:tint="#2A9D95" />
+                </LinearLayout>
 
-    <!-- FOOTER -->
+                <!-- Error -->
+                <TextView
+                    android:id="@+id/tvError"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp" android:background="@drawable/bg_reject_btn"
+                    android:padding="11dp" android:textColor="#C62828" android:textSize="12sp"
+                    android:visibility="gone"
+                    tools:text="Invalid username or password" tools:visibility="visible" />
 
-    <TextView
-        android:id="@+id/tvFooter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:text="BBCO • BISU Balilihan Campus Organization"
-        android:textColor="#8FA09E"
-        android:textSize="10sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+                <!-- Sign in -->
+                <LinearLayout
+                    android:id="@+id/btnLogin"
+                    android:layout_width="match_parent" android:layout_height="56dp"
+                    android:layout_marginTop="20dp" android:background="@drawable/bg_v2_btn_teal"
+                    android:clickable="true" android:focusable="true" android:elevation="4dp"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:gravity="center" android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:letterSpacing="0.08" android:text="SIGN IN"
+                        android:textColor="#FFFFFF" android:textSize="14sp" android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:layout_marginStart="9dp" android:text="→"
+                        android:textColor="#FFFFFF" android:textSize="20sp" android:textStyle="bold" />
+                </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                <!-- Divider -->
+                <LinearLayout
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginTop="22dp" android:gravity="center_vertical"
+                    android:orientation="horizontal">
+                    <View android:layout_width="0dp" android:layout_height="1dp"
+                        android:layout_weight="1" android:background="#C6EDEA" />
+                    <TextView
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp" android:layout_marginEnd="12dp"
+                        android:text="New to BBCO?" android:textColor="#6F8E8B" android:textSize="11sp" />
+                    <View android:layout_width="0dp" android:layout_height="1dp"
+                        android:layout_weight="1" android:background="#C6EDEA" />
+                </LinearLayout>
+
+                <!-- Sign up -->
+                <TextView
+                    android:id="@+id/tvGoToSignUp"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp" android:background="@drawable/bg_v2_outline_teal"
+                    android:clickable="true" android:focusable="true" android:gravity="center"
+                    android:padding="14dp" android:text="Create a Student Account"
+                    android:textColor="#2A9D95" android:textSize="13.5sp" android:textStyle="bold" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/tvFooter"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal" android:layout_marginTop="22dp"
+            android:layout_marginBottom="20dp"
+            android:text="BBCO • BISU Balilihan Campus Organization"
+            android:textColor="#7FA9A5" android:textSize="10sp" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

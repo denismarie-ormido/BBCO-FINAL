@@ -1,15 +1,30 @@
 package com.example.kayara
 
-import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 
-class AdminDashboardActivity : AppCompatActivity() {
+class AdminDashboardActivity :
+    AppCompatActivity() {
+
+    private var organizationId: String = ""
+    private var organizationName: String = ""
+
+    private lateinit var tvOrgName: TextView
+    private lateinit var tvOrgInitials: TextView
 
     private lateinit var navHome: LinearLayout
     private lateinit var navMembers: LinearLayout
@@ -23,87 +38,682 @@ class AdminDashboardActivity : AppCompatActivity() {
     private lateinit var iconRequirements: ImageView
     private lateinit var iconProfile: ImageView
 
-    private lateinit var underlineHome: View
-    private lateinit var underlineMembers: View
-    private lateinit var underlineNotifications: View
-    private lateinit var underlineRequirements: View
-    private lateinit var underlineProfile: View
+    private lateinit var labelHome: TextView
+    private lateinit var labelMembers: TextView
+    private lateinit var labelNotifications: TextView
+    private lateinit var labelRequirements: TextView
+    private lateinit var labelProfile: TextView
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    private var selectedPosition = 0
+
+    override fun onCreate(
+        savedInstanceState: Bundle?
+    ) {
+
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_admin_dashboard)
 
-        // Bottom nav views
-        navHome = findViewById(R.id.navHome)
-        navMembers = findViewById(R.id.navMembers)
-        navNotifications = findViewById(R.id.navNotifications)
-        navRequirements = findViewById(R.id.navRequirements)
-        navProfile = findViewById(R.id.navProfile)
+        // =====================================================
+        // SYSTEM BAR COLORS
+        // =====================================================
 
-        iconHome = findViewById(R.id.iconHome)
-        iconMembers = findViewById(R.id.iconMembers)
-        iconNotifications = findViewById(R.id.iconNotifications)
-        iconRequirements = findViewById(R.id.iconRequirements)
-        iconProfile = findViewById(R.id.iconProfile)
+        window.statusBarColor =
+            getColor(R.color.admin_end)
 
-        underlineHome = findViewById(R.id.underlineHome)
-        underlineMembers = findViewById(R.id.underlineMembers)
-        underlineNotifications = findViewById(R.id.underlineNotifications)
-        underlineRequirements = findViewById(R.id.underlineRequirements)
-        underlineProfile = findViewById(R.id.underlineProfile)
+        window.navigationBarColor =
+            getColor(R.color.bg_light)
 
-        // Header profile button
-        findViewById<FrameLayout>(R.id.btnProfile).setOnClickListener {
-            startActivity(Intent(this, AdminProfileActivity::class.java))
+        WindowCompat
+            .getInsetsController(
+                window,
+                window.decorView
+            )
+            .apply {
+
+                isAppearanceLightStatusBars =
+                    false
+
+                isAppearanceLightNavigationBars =
+                    true
+            }
+
+        setupSystemBars(
+            getColor(R.color.admin_end),
+            getColor(R.color.bg_light)
+        )
+
+        // =====================================================
+        // CONTENT
+        // IMPORTANT: ONLY ONCE
+        // =====================================================
+
+        setContentView(
+            R.layout.activity_admin_dashboard
+        )
+
+        // =====================================================
+        // GET ORGANIZATION FROM LOGIN
+        // =====================================================
+
+        organizationId =
+            intent.getStringExtra(
+                "organizationId"
+            )?.trim()
+                ?: ""
+
+        organizationName =
+            intent.getStringExtra(
+                "organizationName"
+            )?.trim()
+                ?: ""
+
+        if (organizationName.isBlank()) {
+            organizationName =
+                "Organization"
         }
 
-        if (savedInstanceState == null) {
-            loadFragment(AdminDashboardFragment())
-            setActiveTab("home")
+        // =====================================================
+        // DO NOT REDIRECT / SIGN OUT HERE
+        // =====================================================
+
+        if (organizationId.isBlank()) {
+
+            Toast.makeText(
+                this,
+                "Organization information was not found.",
+                Toast.LENGTH_LONG
+            ).show()
+
+            /*
+             * IMPORTANT:
+             * Do NOT call auth.signOut()
+             * Do NOT start MainActivity
+             * Do NOT automatically finish()
+             *
+             * This prevents the dashboard from immediately
+             * returning to the Welcome screen.
+             */
         }
+
+        // =====================================================
+        // HEADER
+        // =====================================================
+
+        tvOrgName =
+            findViewById(
+                R.id.tvOrgName
+            )
+
+        tvOrgInitials =
+            findViewById(
+                R.id.tvOrgInitials
+            )
+
+        tvOrgName.text =
+            organizationName
+
+        tvOrgInitials.text =
+            getOrganizationInitials(
+                organizationName
+            )
+
+        // =====================================================
+        // NAVIGATION VIEWS
+        // =====================================================
+
+        navHome =
+            findViewById(
+                R.id.navHome
+            )
+
+        navMembers =
+            findViewById(
+                R.id.navMembers
+            )
+
+        navNotifications =
+            findViewById(
+                R.id.navNotifications
+            )
+
+        navRequirements =
+            findViewById(
+                R.id.navRequirements
+            )
+
+        navProfile =
+            findViewById(
+                R.id.navProfile
+            )
+
+        iconHome =
+            findViewById(
+                R.id.iconHome
+            )
+
+        iconMembers =
+            findViewById(
+                R.id.iconMembers
+            )
+
+        iconNotifications =
+            findViewById(
+                R.id.iconNotifications
+            )
+
+        iconRequirements =
+            findViewById(
+                R.id.iconRequirements
+            )
+
+        iconProfile =
+            findViewById(
+                R.id.iconProfile
+            )
+
+        labelHome =
+            findViewById(
+                R.id.labelHome
+            )
+
+        labelMembers =
+            findViewById(
+                R.id.labelMembers
+            )
+
+        labelNotifications =
+            findViewById(
+                R.id.labelNotifications
+            )
+
+        labelRequirements =
+            findViewById(
+                R.id.labelRequirements
+            )
+
+        labelProfile =
+            findViewById(
+                R.id.labelProfile
+            )
+
+        // =====================================================
+        // CHAT
+        // =====================================================
+
+        findViewById<FrameLayout>(
+            R.id.btnChat
+        ).setOnClickListener {
+
+            if (
+                organizationId
+                    .isBlank()
+            ) {
+
+                Toast.makeText(
+                    this,
+                    "Organization not found.",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+                return@setOnClickListener
+            }
+
+            showAdminChatChooser(
+                this,
+                organizationId,
+                organizationName
+            )
+        }
+
+        // =====================================================
+        // NAVIGATION CLICKS
+        // =====================================================
 
         navHome.setOnClickListener {
-            loadFragment(AdminDashboardFragment())
-            setActiveTab("home")
+
+            if (
+                selectedPosition != 0
+            ) {
+
+                showHome()
+            }
         }
+
         navMembers.setOnClickListener {
-            loadFragment(MembersFragment())
-            setActiveTab("members")
+
+            if (
+                selectedPosition != 1
+            ) {
+
+                showMembers()
+            }
         }
-        navNotifications.setOnClickListener {
-            loadFragment(AdminNotificationsFragment())
-            setActiveTab("notifications")
-        }
-        navRequirements.setOnClickListener {
-            loadFragment(RequirementsFragment())
-            setActiveTab("requirements")
-        }
+
+        navNotifications
+            .setOnClickListener {
+
+                if (
+                    selectedPosition != 2
+                ) {
+
+                    showNotifications()
+                }
+            }
+
+        navRequirements
+            .setOnClickListener {
+
+                if (
+                    selectedPosition != 3
+                ) {
+
+                    showRequirements()
+                }
+            }
+
         navProfile.setOnClickListener {
-            loadFragment(OrganizationProfileFragment())
-            setActiveTab("profile")
+
+            if (
+                selectedPosition != 4
+            ) {
+
+                showProfile()
+            }
+        }
+
+        // =====================================================
+        // FIRST SCREEN
+        // =====================================================
+
+        if (
+            savedInstanceState ==
+            null
+        ) {
+
+            showHome()
+
+        } else {
+
+            updateBottomNav(
+                selectedPosition
+            )
         }
     }
 
-    private fun loadFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainer, fragment)
+    // =========================================================
+    // SYSTEM BARS
+    // =========================================================
+
+    private fun setupSystemBars(
+        statusBarColor: Int,
+        navigationBarColor: Int
+    ) {
+
+        WindowCompat.setDecorFitsSystemWindows(
+            window,
+            true
+        )
+
+        window.clearFlags(
+            WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+        )
+
+        window.addFlags(
+            WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
+        )
+
+        window.statusBarColor =
+            statusBarColor
+
+        window.navigationBarColor =
+            navigationBarColor
+
+        WindowInsetsControllerCompat(
+            window,
+            window.decorView
+        ).apply {
+
+            isAppearanceLightStatusBars =
+                false
+
+            isAppearanceLightNavigationBars =
+                true
+        }
+    }
+
+    // =========================================================
+    // HOME
+    // =========================================================
+
+    private fun showHome() {
+
+        loadFragment(
+            AdminDashboardFragment
+                .newInstance(
+                    organizationId,
+                    organizationName
+                )
+        )
+
+        updateBottomNav(0)
+    }
+
+    // =========================================================
+    // MEMBERS
+    // =========================================================
+
+    private fun showMembers() {
+
+        loadFragment(
+            MembersFragment
+                .newInstance(
+                    organizationId
+                )
+        )
+
+        updateBottomNav(1)
+    }
+
+    // =========================================================
+    // NOTIFICATIONS
+    // =========================================================
+
+    private fun showNotifications() {
+
+        loadFragment(
+            AdminNotificationsFragment
+                .newInstance(
+                    organizationId
+                )
+        )
+
+        updateBottomNav(2)
+    }
+
+    // =========================================================
+    // REQUIREMENTS
+    // =========================================================
+
+    private fun showRequirements() {
+
+        loadFragment(
+            RequirementsFragment
+                .newInstance(
+                    organizationId
+                )
+        )
+
+        updateBottomNav(3)
+    }
+
+    // =========================================================
+    // PROFILE
+    // =========================================================
+
+    private fun showProfile() {
+
+        loadFragment(
+            OrganizationProfileFragment
+                .newInstance(
+                    organizationId,
+                    organizationName
+                )
+        )
+
+        updateBottomNav(4)
+    }
+
+    // =========================================================
+    // OPEN MEMBERS TAB
+    // =========================================================
+
+    fun openMembersTab(
+        filter: String = "pending"
+    ) {
+
+        loadFragment(
+            MembersFragment
+                .newInstance(
+                    organizationId,
+                    filter
+                )
+        )
+
+        updateBottomNav(1)
+    }
+
+    // =========================================================
+    // LOAD FRAGMENT
+    // =========================================================
+
+    private fun loadFragment(
+        fragment: Fragment
+    ) {
+
+        supportFragmentManager
+            .beginTransaction()
+            .setCustomAnimations(
+                android.R.anim.fade_in,
+                android.R.anim.fade_out
+            )
+            .replace(
+                R.id.fragmentContainer,
+                fragment
+            )
             .commit()
     }
 
-    private fun setActiveTab(tab: String) {
-        val activeColor = getColor(R.color.navy)
-        val inactiveColor = getColor(R.color.placeholder_gray)
+    // =========================================================
+    // BOTTOM NAV
+    // =========================================================
 
-        iconHome.setColorFilter(if (tab == "home") activeColor else inactiveColor)
-        iconMembers.setColorFilter(if (tab == "members") activeColor else inactiveColor)
-        iconNotifications.setColorFilter(if (tab == "notifications") activeColor else inactiveColor)
-        iconRequirements.setColorFilter(if (tab == "requirements") activeColor else inactiveColor)
-        iconProfile.setColorFilter(if (tab == "profile") activeColor else inactiveColor)
+    private fun updateBottomNav(
+        selectedPosition: Int
+    ) {
 
-        underlineHome.visibility = if (tab == "home") View.VISIBLE else View.INVISIBLE
-        underlineMembers.visibility = if (tab == "members") View.VISIBLE else View.INVISIBLE
-        underlineNotifications.visibility = if (tab == "notifications") View.VISIBLE else View.INVISIBLE
-        underlineRequirements.visibility = if (tab == "requirements") View.VISIBLE else View.INVISIBLE
-        underlineProfile.visibility = if (tab == "profile") View.VISIBLE else View.INVISIBLE
+        this.selectedPosition =
+            selectedPosition
+
+        val icons =
+            listOf(
+                iconHome,
+                iconMembers,
+                iconNotifications,
+                iconRequirements,
+                iconProfile
+            )
+
+        val labels =
+            listOf(
+                labelHome,
+                labelMembers,
+                labelNotifications,
+                labelRequirements,
+                labelProfile
+            )
+
+        val activeColor =
+            getColor(
+                R.color.admin_end
+            )
+
+        val inactiveColor =
+            Color.parseColor(
+                "#AAB7C8"
+            )
+
+        val density =
+            resources
+                .displayMetrics
+                .density
+
+        icons.forEachIndexed {
+                index,
+                icon ->
+
+            val selected =
+                index ==
+                        selectedPosition
+
+            icon.animate().cancel()
+
+            labels[index]
+                .animate()
+                .cancel()
+
+            icon.setColorFilter(
+                if (selected)
+                    activeColor
+                else
+                    inactiveColor
+            )
+
+            labels[index]
+                .setTextColor(
+                    if (selected)
+                        activeColor
+                    else
+                        inactiveColor
+                )
+
+            if (
+                selected
+            ) {
+
+                icon.background =
+                    GradientDrawable()
+                        .apply {
+
+                            shape =
+                                GradientDrawable.OVAL
+
+                            setColor(
+                                Color.WHITE
+                            )
+
+                            setStroke(
+                                (1f * density)
+                                    .toInt(),
+                                Color.parseColor(
+                                    "#DDEBE8"
+                                )
+                            )
+                        }
+
+                icon.elevation =
+                    10f *
+                            density
+
+                icon.alpha =
+                    0.82f
+
+                icon.scaleX =
+                    0.92f
+
+                icon.scaleY =
+                    0.92f
+
+                icon.animate()
+                    .translationY(
+                        -18f *
+                                density
+                    )
+                    .scaleX(1.15f)
+                    .scaleY(1.15f)
+                    .alpha(1f)
+                    .setDuration(300L)
+                    .setInterpolator(
+                        AccelerateDecelerateInterpolator()
+                    )
+                    .start()
+
+                labels[index]
+                    .animate()
+                    .translationY(
+                        -6f *
+                                density
+                    )
+                    .alpha(1f)
+                    .setDuration(300L)
+                    .start()
+
+            } else {
+
+                icon.animate()
+                    .translationY(0f)
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .alpha(0.68f)
+                    .setDuration(250L)
+                    .setInterpolator(
+                        AccelerateDecelerateInterpolator()
+                    )
+                    .withEndAction {
+
+                        if (
+                            index !=
+                            this.selectedPosition
+                        ) {
+
+                            icon.background =
+                                ColorDrawable(
+                                    Color.TRANSPARENT
+                                )
+
+                            icon.elevation =
+                                0f
+                        }
+                    }
+                    .start()
+
+                labels[index]
+                    .animate()
+                    .translationY(0f)
+                    .alpha(0.72f)
+                    .setDuration(250L)
+                    .start()
+            }
+        }
+    }
+
+    // =========================================================
+    // ORGANIZATION INITIALS
+    // =========================================================
+
+    private fun getOrganizationInitials(
+        name: String
+    ): String {
+
+        val words =
+            name.trim()
+                .split(
+                    "\\s+".toRegex()
+                )
+                .filter {
+                    it.isNotBlank()
+                }
+
+        return when {
+
+            words.size >= 2 ->
+
+                words
+                    .take(3)
+                    .joinToString(
+                        ""
+                    ) {
+
+                        it.first()
+                            .uppercase()
+                    }
+
+            name.length >= 3 ->
+
+                name.take(3)
+                    .uppercase()
+
+            else ->
+
+                name.uppercase()
+        }
     }
 }

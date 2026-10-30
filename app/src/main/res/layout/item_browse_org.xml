@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -10,16 +12,43 @@
     android:clickable="true"
     android:focusable="true">
 
-    <TextView
-        android:id="@+id/tvBrowseAvatar"
+    <!-- =====================================================
+         ORGANIZATION AVATAR
+         Actual profile picture + initials fallback
+         ===================================================== -->
+
+    <FrameLayout
         android:layout_width="44dp"
-        android:layout_height="44dp"
-        android:background="@drawable/bg_avatar_circle"
-        android:gravity="center"
-        android:text="ORG"
-        android:textColor="@color/white"
-        android:textSize="11sp"
-        android:textStyle="bold" />
+        android:layout_height="44dp">
+
+        <!-- FALLBACK INITIALS -->
+
+        <TextView
+            android:id="@+id/tvBrowseAvatar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_avatar_circle"
+            android:gravity="center"
+            android:text="ORG"
+            android:textColor="@color/white"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+        <!-- CURRENT ORGANIZATION PROFILE PICTURE -->
+
+        <ImageView
+            android:id="@+id/imgBrowseAvatar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            android:contentDescription="Organization profile picture" />
+
+    </FrameLayout>
+
+    <!-- =====================================================
+         ORGANIZATION INFO
+         ===================================================== -->
 
     <LinearLayout
         android:layout_width="0dp"
@@ -47,7 +76,12 @@
             android:text="Members"
             android:textColor="@color/text_gray"
             android:textSize="11sp" />
+
     </LinearLayout>
+
+    <!-- =====================================================
+         STATUS / JOIN BUTTON
+         ===================================================== -->
 
     <TextView
         android:id="@+id/tvBrowseStatus"

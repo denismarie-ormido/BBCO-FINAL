@@ -1,245 +1,610 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/bg_light">
+
 
     <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:overScrollMode="never"
+        android:clipToPadding="false"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <!-- Curved header -->
+
+            <!-- ================================================= -->
+            <!-- ADMIN HEADER                                      -->
+            <!-- ================================================= -->
+
             <FrameLayout
                 android:id="@+id/headerCurve"
-                android:layout_width="416dp"
-                android:layout_height="238dp"
-                android:background="@drawable/bg_header_curve_admin"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:background="@drawable/bg_v2_header_admin"
+                android:clipChildren="true"
+                android:clipToPadding="true">
 
-                <ImageView
-                    android:id="@+id/btnBack"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_margin="20dp"
-                    android:background="@drawable/bg_back_circle"
-                    android:clickable="true"
-                    android:contentDescription="@string/back"
-                    android:focusable="true"
-                    android:padding="9dp"
-                    android:src="@drawable/ic_back_arrow"
-                    app:tint="@color/white" />
+                <View android:layout_width="190dp" android:layout_height="190dp"
+                    android:layout_gravity="end|top" android:layout_marginTop="-60dp" android:layout_marginEnd="-50dp"
+                    android:background="@drawable/bg_v2_deco_circle" />
+                <View android:layout_width="110dp" android:layout_height="110dp"
+                    android:layout_gravity="start|bottom" android:layout_marginStart="-40dp" android:layout_marginBottom="50dp"
+                    android:background="@drawable/bg_v2_deco_circle" />
+
+
+                <!-- BIG CIRCLE TOP RIGHT -->
+
+                <View
+                    android:layout_width="165dp"
+                    android:layout_height="165dp"
+                    android:layout_gravity="top|end"
+                    android:layout_marginTop="-55dp"
+                    android:layout_marginEnd="-38dp"
+                    android:background="@drawable/bg_auth_deco_circle"
+                    android:alpha="0.18" />
+
+
+                <!-- SMALL CENTER CIRCLE -->
+
+                <View
+                    android:layout_width="84dp"
+                    android:layout_height="84dp"
+                    android:layout_gravity="top|center_horizontal"
+                    android:layout_marginTop="48dp"
+                    android:layout_marginStart="46dp"
+                    android:background="@drawable/bg_auth_deco_circle"
+                    android:alpha="0.10" />
+
+
+                <!-- LEFT BOTTOM CIRCLE -->
+
+                <View
+                    android:layout_width="110dp"
+                    android:layout_height="110dp"
+                    android:layout_gravity="bottom|start"
+                    android:layout_marginStart="-48dp"
+                    android:layout_marginBottom="-28dp"
+                    android:background="@drawable/bg_auth_deco_circle"
+                    android:alpha="0.14" />
+
+
+                <!-- ================================================= -->
+                <!-- BACK BUTTON                                       -->
+                <!-- ================================================= -->
 
                 <FrameLayout
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_header_icon_circle">
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_gravity="top|start"
+                    android:layout_marginStart="18dp"
+                    android:layout_marginTop="18dp"
+                    android:background="@drawable/bg_header_icon_btn"
+                    android:elevation="3dp">
 
                     <ImageView
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
-                        android:layout_gravity="center"
-                        android:contentDescription="@string/admin_icon"
-                        android:src="@drawable/ic_person"
+                        android:id="@+id/btnBack"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="12dp"
+                        android:src="@drawable/ic_back_arrow"
+                        android:contentDescription="@string/back"
+                        android:clickable="true"
+                        android:focusable="true"
                         app:tint="@color/white" />
+
                 </FrameLayout>
+
+
+                <!-- ================================================= -->
+                <!-- CENTER ADMIN CONTENT                              -->
+                <!-- ================================================= -->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="54dp"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp">
+
+
+                    <!-- ADMIN ICON -->
+
+                    <FrameLayout
+                        android:layout_width="76dp"
+                        android:layout_height="76dp"
+                        android:background="@drawable/bg_header_icon_circle">
+
+                        <ImageView
+                            android:layout_width="31dp"
+                            android:layout_height="31dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_profile_person"
+                            android:contentDescription="@string/admin_icon"
+                            app:tint="@color/white" />
+
+                    </FrameLayout>
+
+
+                    <!-- WELCOME -->
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="13dp"
+                        android:includeFontPadding="false"
+                        android:text="Welcome Back"
+                        android:textColor="@color/white"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+
+                    <!-- SUBTITLE -->
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Sign in to continue to your BBCO account"
+                        android:textColor="#E7FFFB"
+                        android:textSize="11.5sp" />
+
+                </LinearLayout>
+
             </FrameLayout>
 
-            <!-- Content -->
-            <LinearLayout
-                android:id="@+id/contentLayout"
-                android:layout_width="0dp"
+
+            <!-- ================================================= -->
+            <!-- LOGIN CARD                                        -->
+            <!-- ================================================= -->
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingHorizontal="28dp"
-                android:paddingTop="28dp"
-                android:paddingBottom="30dp"
-                app:layout_constraintTop_toBottomOf="@id/headerCurve"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent">
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="-34dp"
+                android:layout_marginEnd="18dp"
+                app:cardBackgroundColor="#FCFFFFFF"
+                app:cardCornerRadius="25dp"
+                app:cardElevation="8dp"
+                app:strokeColor="#E3ECF4"
+                app:strokeWidth="1dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/welcome_back"
-                    android:textColor="@color/dark_blue"
-                    android:textSize="26sp"
-                    android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="@string/login_as_admin"
-                    android:textColor="@color/text_gray"
-                    android:textSize="13sp" />
-
-                <!-- Username -->
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:layout_marginTop="30dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:background="@drawable/bg_pill_input_blue"
-                    android:paddingHorizontal="18dp">
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/ic_person"
-                        app:tint="@color/placeholder_gray"
-                        android:contentDescription="@null" />
-
-                    <EditText
-                        android:id="@+id/etUsername"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="12dp"
-                        android:background="@null"
-                        android:hint="@string/username"
-                        android:textColorHint="@color/placeholder_gray"
-                        android:textColor="@color/dark_blue"
-                        android:textSize="14sp"
-                        android:inputType="text"
-                        android:autofillHints="username" />
-                </LinearLayout>
-
-                <!-- Password -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:layout_marginTop="14dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:background="@drawable/bg_pill_input_blue"
-                    android:paddingHorizontal="18dp">
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/ic_lock"
-                        android:contentDescription="@null" />
-
-                    <EditText
-                        android:id="@+id/etPassword"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="12dp"
-                        android:background="@null"
-                        android:hint="@string/password"
-                        android:textColorHint="@color/placeholder_gray"
-                        android:textColor="@color/dark_blue"
-                        android:textSize="14sp"
-                        android:inputType="textPassword"
-                        android:autofillHints="password" />
-
-                    <ImageView
-                        android:id="@+id/btnTogglePassword"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/ic_eye"
-                        android:contentDescription="@string/toggle_password"
-                        android:clickable="true"
-                        android:focusable="true" />
-                </LinearLayout>
-
-                <!-- Remember me / Forgot password -->
-                <LinearLayout
+                    android:id="@+id/contentLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:orientation="vertical"
+                    android:paddingStart="20dp"
+                    android:paddingTop="22dp"
+                    android:paddingEnd="20dp"
+                    android:paddingBottom="22dp">
 
-                    <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:src="@drawable/ic_check_circle_filled"
-                        app:tint="@color/mid_blue"
-                        android:contentDescription="@string/remember_me" />
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="8dp"
-                        android:text="@string/remember_me"
-                        android:textColor="@color/text_gray"
-                        android:textSize="12.5sp" />
+                    <!-- ================================================= -->
+                    <!-- ROLE LABEL                                        -->
+                    <!-- ================================================= -->
 
-                    <TextView
-                        android:id="@+id/tvForgotPassword"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/forgot_password"
-                        android:textColor="@color/mid_blue"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+
+                        <View
+                            android:layout_width="4dp"
+                            android:layout_height="17dp"
+                            android:background="@color/admin_end" />
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:letterSpacing="0.11"
+                            android:text="ORGANIZATION ADMIN"
+                            android:textColor="@color/admin_end"
+                            android:textSize="9.5sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:text="Enter your account details below"
+                        android:textColor="@color/text_gray"
+                        android:textSize="11.5sp" />
+
+
+                    <!-- ================================================= -->
+                    <!-- EMAIL INPUT                                       -->
+                    <!-- ================================================= -->
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:layout_marginTop="18dp"
+                        app:cardBackgroundColor="#F0F8F8"
+                        app:cardCornerRadius="17dp"
+                        app:cardElevation="0dp"
+                        app:strokeColor="#CBE8E5"
+                        app:strokeWidth="1dp">
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="14dp"
+                            android:background="@drawable/bg_header_icon_btn">
+
+
+                            <!-- EMAIL ICON CIRCLE -->
+
+                            <FrameLayout
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:background="@drawable/bg_auth_chip">
+
+                                <ImageView
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_person"
+                                    android:contentDescription="@null"
+                                    app:tint="@color/admin_end" />
+
+                            </FrameLayout>
+
+
+                            <!-- EMAIL -->
+
+                            <EditText
+                                android:id="@+id/etUsername"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginStart="10dp"
+                                android:layout_weight="1"
+                                android:autofillHints="username"
+                                android:background="@null"
+                                android:gravity="center_vertical"
+                                android:hint="Organization username"
+                                android:includeFontPadding="false"
+                                android:inputType="text"
+                                android:padding="0dp"
+                                android:singleLine="true"
+                                android:textColor="@color/dark_blue"
+                                android:textColorHint="@color/placeholder_gray"
+                                android:textSize="13sp" />
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+
+                    <!-- ================================================= -->
+                    <!-- PASSWORD INPUT                                    -->
+                    <!-- ================================================= -->
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:layout_marginTop="10dp"
+                        app:cardBackgroundColor="#F0F8F8"
+                        app:cardCornerRadius="17dp"
+                        app:cardElevation="0dp"
+                        app:strokeColor="#CBE8E5"
+                        app:strokeWidth="1dp">
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="11dp"
+                            android:background="@drawable/bg_header_icon_btn">
+
+
+                            <!-- LOCK ICON CIRCLE -->
+
+                            <FrameLayout
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:background="@drawable/bg_auth_chip">
+
+                                <ImageView
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_lock"
+                                    android:contentDescription="@null"
+                                    app:tint="@color/admin_end" />
+
+                            </FrameLayout>
+
+
+                            <!-- PASSWORD -->
+
+                            <EditText
+                                android:id="@+id/etPassword"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginStart="10dp"
+                                android:layout_weight="1"
+                                android:autofillHints="password"
+                                android:background="@null"
+                                android:gravity="center_vertical"
+                                android:hint="Password"
+                                android:includeFontPadding="false"
+                                android:inputType="textPassword"
+                                android:padding="0dp"
+                                android:singleLine="true"
+                                android:textColor="@color/dark_blue"
+                                android:textColorHint="@color/placeholder_gray"
+                                android:textSize="13sp" />
+
+
+                            <!-- SHOW / HIDE -->
+
+                            <ImageView
+                                android:id="@+id/btnTogglePassword"
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:padding="4dp"
+                                android:src="@drawable/ic_eye"
+                                android:contentDescription="@string/toggle_password"
+                                android:clickable="true"
+                                android:focusable="true"
+                                app:tint="@color/admin_end" />
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+
+                    <!-- ================================================= -->
+                    <!-- REMEMBER / FORGOT                                 -->
+                    <!-- ================================================= -->
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="42dp"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+
+                        <ImageView
+                            android:layout_width="17dp"
+                            android:layout_height="17dp"
+                            android:src="@drawable/ic_check_circle_filled"
+                            android:contentDescription="@string/remember_me"
+                            app:tint="@color/admin_end" />
+
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="7dp"
+                            android:layout_weight="1"
+                            android:text="@string/remember_me"
+                            android:textColor="@color/text_gray"
+                            android:textSize="11sp" />
+
+
+                        <TextView
+                            android:id="@+id/tvForgotPassword"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="@string/forgot_password"
+                            android:textColor="@color/admin_end"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            android:clickable="true"
+                            android:focusable="true" />
+
+                    </LinearLayout>
+
+
+                    <!-- ================================================= -->
+                    <!-- ERROR                                             -->
+                    <!-- ================================================= -->
+
+                    <TextView
+                        android:id="@+id/tvError"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:background="@drawable/bg_auth_status_box"
+                        android:lineSpacingExtra="2dp"
+                        android:paddingStart="12dp"
+                        android:paddingTop="10dp"
+                        android:paddingEnd="12dp"
+                        android:paddingBottom="10dp"
+                        android:text=""
+                        android:textColor="#D73737"
+                        android:textSize="11.5sp"
+                        android:visibility="gone" />
+
+
+                    <!-- ================================================= -->
+                    <!-- EDIT & RESUBMIT                                   -->
+                    <!-- ================================================= -->
+
+                    <TextView
+                        android:id="@+id/btnEditResubmit"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/bg_pill_btn_admin"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:text="Edit &amp; Resubmit Application"
+                        android:textColor="@color/white"
                         android:textSize="12.5sp"
                         android:textStyle="bold"
+                        android:visibility="gone" />
+
+
+                    <!-- ================================================= -->
+                    <!-- SIGN IN BUTTON                                    -->
+                    <!-- ================================================= -->
+
+                    <LinearLayout
+                        android:id="@+id/btnLogin"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:layout_marginTop="14dp"
+                        android:background="@drawable/bg_pill_btn_admin"
                         android:clickable="true"
-                        android:focusable="true" />
-                </LinearLayout>
+                        android:focusable="true"
+                        android:elevation="5dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
 
-                <!-- Error message -->
-                <TextView
-                    android:id="@+id/tvError"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text=""
-                    android:textColor="#E53935"
-                    android:textSize="12.5sp"
-                    android:visibility="gone" />
 
-                <!-- Login button -->
-                <LinearLayout
-                    android:id="@+id/btnLogin"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:layout_marginTop="30dp"
-                    android:gravity="center"
-                    android:background="@drawable/bg_pill_btn_admin"
-                    android:clickable="true"
-                    android:focusable="true">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:includeFontPadding="false"
+                            android:letterSpacing="0.12"
+                            android:text="SIGN IN"
+                            android:textColor="@color/white"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:includeFontPadding="false"
+                            android:text="→"
+                            android:textColor="@color/white"
+                            android:textSize="17sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+
+                    <!-- ================================================= -->
+                    <!-- DIVIDER                                           -->
+                    <!-- ================================================= -->
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/login"
-                        android:textColor="@color/white"
-                        android:textSize="15sp"
-                        android:textStyle="bold"
-                        android:letterSpacing="0.08" />
+                        android:layout_marginTop="18dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1"
+                            android:background="#DCE7EC" />
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:text="New to BBCO?"
+                            android:textColor="@color/text_gray"
+                            android:textSize="9.5sp" />
+
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1"
+                            android:background="#DCE7EC" />
+
+                    </LinearLayout>
+
+
+                    <!-- ================================================= -->
+                    <!-- CREATE ADMIN ACCOUNT                              -->
+                    <!-- ================================================= -->
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="12dp"
+                        app:cardBackgroundColor="#F7FFFE"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="0dp"
+                        app:strokeColor="@color/admin_end"
+                        app:strokeWidth="1dp">
+
+
+                        <TextView
+                            android:id="@+id/tvGoToSignUp"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="Create an Admin Account"
+                            android:textColor="@color/admin_end"
+                            android:textSize="11.5sp"
+                            android:textStyle="bold"
+                            android:clickable="true"
+                            android:focusable="true" />
+
+                    </com.google.android.material.card.MaterialCardView>
+
+
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/tvGoToSignUp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/dont_have_account_admin"
-                    android:textColor="@color/text_gray"
-                    android:textSize="12.5sp"
-                    android:clickable="true"
-                    android:focusable="true" />
+            </com.google.android.material.card.MaterialCardView>
 
-            </LinearLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- ================================================= -->
+            <!-- FOOTER                                            -->
+            <!-- ================================================= -->
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="18dp"
+                android:layout_marginBottom="26dp"
+                android:text="BBCO · BISU Balilihan Campus Organization"
+                android:textColor="#8EA6A5"
+                android:textSize="9sp" />
+
+        </LinearLayout>
+
     </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

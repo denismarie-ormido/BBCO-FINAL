@@ -2,7 +2,6 @@ package com.example.kayara
 
 import android.os.Bundle
 import android.text.InputType
-import android.util.Patterns
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
@@ -23,55 +22,131 @@ class StudentSignUpActivity : AppCompatActivity() {
     private var isConfirmPasswordVisible = false
     private var isRegistering = false
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_student_sign_up)
 
-        // Firebase
-        auth = FirebaseAuth.getInstance()
-        db = FirebaseFirestore.getInstance()
+        setContentView(
+            R.layout.activity_student_sign_up
+        )
 
-        // Views
-        val etFullName = findViewById<EditText>(R.id.etFullName)
-        val etStudentId = findViewById<EditText>(R.id.etStudentId)
-        val spinnerCourse = findViewById<Spinner>(R.id.spinnerCourse)
-        val spinnerYearLevel = findViewById<Spinner>(R.id.spinnerYearLevel)
-        val etEmail = findViewById<EditText>(R.id.etEmail)
-        val etUsername = findViewById<EditText>(R.id.etUsername)
-        val etPassword = findViewById<EditText>(R.id.etPassword)
-        val etConfirmPassword = findViewById<EditText>(R.id.etConfirmPassword)
-        val etInterest = findViewById<EditText>(R.id.etInterest)
 
-        val tvError = findViewById<TextView>(R.id.tvError)
-        val btnSignUp = findViewById<LinearLayout>(R.id.btnSignUp)
-        val btnBack = findViewById<ImageView>(R.id.btnBack)
-        val tvGoToLogin = findViewById<TextView>(R.id.tvGoToLogin)
+        // =====================================================
+        // FIREBASE
+        // =====================================================
+
+        auth =
+            FirebaseAuth.getInstance()
+
+        db =
+            FirebaseFirestore.getInstance()
+
+
+        // =====================================================
+        // VIEWS
+        // =====================================================
+
+        val etFullName =
+            findViewById<EditText>(
+                R.id.etFullName
+            )
+
+        val etStudentId =
+            findViewById<EditText>(
+                R.id.etStudentId
+            )
+
+        val spinnerCourse =
+            findViewById<Spinner>(
+                R.id.spinnerCourse
+            )
+
+        val spinnerYearLevel =
+            findViewById<Spinner>(
+                R.id.spinnerYearLevel
+            )
+
+        val etEmail =
+            findViewById<EditText>(
+                R.id.etEmail
+            )
+
+        val etUsername =
+            findViewById<EditText>(
+                R.id.etUsername
+            )
+
+        val etPassword =
+            findViewById<EditText>(
+                R.id.etPassword
+            )
+
+        val etConfirmPassword =
+            findViewById<EditText>(
+                R.id.etConfirmPassword
+            )
+
+        val etInterest =
+            findViewById<EditText>(
+                R.id.etInterest
+            )
+
+        val tvError =
+            findViewById<TextView>(
+                R.id.tvError
+            )
+
+        val btnSignUp =
+            findViewById<LinearLayout>(
+                R.id.btnSignUp
+            )
+
+        val btnBack =
+            findViewById<ImageView>(
+                R.id.btnBack
+            )
+
+        val tvGoToLogin =
+            findViewById<TextView>(
+                R.id.tvGoToLogin
+            )
 
         val btnTogglePassword =
-            findViewById<ImageView>(R.id.btnTogglePassword)
+            findViewById<ImageView>(
+                R.id.btnTogglePassword
+            )
 
         val btnToggleConfirmPassword =
-            findViewById<ImageView>(R.id.btnToggleConfirmPassword)
+            findViewById<ImageView>(
+                R.id.btnToggleConfirmPassword
+            )
 
-        // ---------------------------------------------------------
+
+        // =====================================================
         // BACK
-        // ---------------------------------------------------------
+        // =====================================================
 
         btnBack.setOnClickListener {
+
             finish()
         }
+
 
         tvGoToLogin.setOnClickListener {
+
             finish()
         }
 
-        // ---------------------------------------------------------
+
+        // =====================================================
         // PASSWORD VISIBILITY
-        // ---------------------------------------------------------
+        // =====================================================
 
         btnTogglePassword.setOnClickListener {
 
-            isPasswordVisible = !isPasswordVisible
+            isPasswordVisible =
+                !isPasswordVisible
 
             togglePasswordVisibility(
                 etPassword,
@@ -80,9 +155,11 @@ class StudentSignUpActivity : AppCompatActivity() {
             )
         }
 
+
         btnToggleConfirmPassword.setOnClickListener {
 
-            isConfirmPasswordVisible = !isConfirmPasswordVisible
+            isConfirmPasswordVisible =
+                !isConfirmPasswordVisible
 
             togglePasswordVisibility(
                 etConfirmPassword,
@@ -91,9 +168,10 @@ class StudentSignUpActivity : AppCompatActivity() {
             )
         }
 
-        // ---------------------------------------------------------
+
+        // =====================================================
         // SIGN UP
-        // ---------------------------------------------------------
+        // =====================================================
 
         btnSignUp.setOnClickListener {
 
@@ -101,22 +179,63 @@ class StudentSignUpActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val fullName = etFullName.text.toString().trim()
-            val studentId = etStudentId.text.toString().trim()
 
-            val course = spinnerCourse.selectedItem?.toString()?.trim() ?: ""
+            // =================================================
+            // GET VALUES
+            // =================================================
+
+            val fullName =
+                etFullName.text
+                    .toString()
+                    .trim()
+
+            val studentId =
+                etStudentId.text
+                    .toString()
+                    .trim()
+
+            val course =
+                spinnerCourse
+                    .selectedItem
+                    ?.toString()
+                    ?.trim()
+                    ?: ""
+
             val yearLevel =
-                spinnerYearLevel.selectedItem?.toString()?.trim() ?: ""
+                spinnerYearLevel
+                    .selectedItem
+                    ?.toString()
+                    ?.trim()
+                    ?: ""
 
-            val email = etEmail.text.toString().trim().lowercase()
-            val username = etUsername.text.toString().trim()
-            val password = etPassword.text.toString()
-            val confirmPassword = etConfirmPassword.text.toString()
-            val interest = etInterest.text.toString().trim()
+            val email =
+                etEmail.text
+                    .toString()
+                    .trim()
+                    .lowercase()
 
-            // -----------------------------------------------------
-            // VALIDATION
-            // -----------------------------------------------------
+            val username =
+                etUsername.text
+                    .toString()
+                    .trim()
+
+            val password =
+                etPassword.text
+                    .toString()
+
+            val confirmPassword =
+                etConfirmPassword.text
+                    .toString()
+
+            val interest =
+                etInterest.text
+                    .toString()
+                    .trim()
+
+
+            // =================================================
+            // EMPTY FIELD VALIDATION
+            // =================================================
 
             if (
                 fullName.isEmpty() ||
@@ -136,7 +255,17 @@ class StudentSignUpActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            if (course == "Select Course") {
+
+            // =================================================
+            // COURSE VALIDATION
+            // =================================================
+
+            if (
+                course.equals(
+                    "Select Course",
+                    ignoreCase = true
+                )
+            ) {
 
                 showError(
                     tvError,
@@ -146,7 +275,17 @@ class StudentSignUpActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            if (yearLevel == "Select Year Level") {
+
+            // =================================================
+            // YEAR LEVEL VALIDATION
+            // =================================================
+
+            if (
+                yearLevel.equals(
+                    "Select Year Level",
+                    ignoreCase = true
+                )
+            ) {
 
                 showError(
                     tvError,
@@ -156,177 +295,338 @@ class StudentSignUpActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+
+            // =================================================
+            // SCHOOL ID VALIDATION
+            //
+            // Example:
+            // 203892
+            // =================================================
+
+            if (!studentId.matches(Regex("^\\d+$"))) {
 
                 showError(
                     tvError,
-                    "Please enter a valid email address."
+                    "School ID must contain numbers only."
                 )
+
+                etStudentId.requestFocus()
 
                 return@setOnClickListener
             }
 
-            if (!email.endsWith("@bisu.edu.ph")) {
+
+            // =================================================
+            // STUDENT BISU EMAIL FORMAT
+            //
+            // REQUIRED:
+            // bal_schoolID@bisu.edu.ph
+            //
+            // Example:
+            // bal_203892@bisu.edu.ph
+            // =================================================
+
+            val studentEmailPattern =
+                Regex(
+                    "^bal_\\d+@bisu\\.edu\\.ph$",
+                    RegexOption.IGNORE_CASE
+                )
+
+
+            if (
+                !studentEmailPattern.matches(
+                    email
+                )
+            ) {
 
                 showError(
                     tvError,
-                    "Please use your official BISU email (@bisu.edu.ph)."
+                    "Invalid student email. Use this format: bal_schoolID@bisu.edu.ph (Example: bal_203892@bisu.edu.ph)."
                 )
+
+                etEmail.requestFocus()
 
                 return@setOnClickListener
             }
 
-            if (password.length < 6) {
+
+            // =================================================
+            // EMAIL MUST MATCH SCHOOL ID
+            //
+            // If ID = 203892
+            // email MUST = bal_203892@bisu.edu.ph
+            // =================================================
+
+            val expectedEmail =
+                "bal_${studentId.lowercase()}@bisu.edu.ph"
+
+
+            if (
+                !email.equals(
+                    expectedEmail,
+                    ignoreCase = true
+                )
+            ) {
+
+                showError(
+                    tvError,
+                    "Your BISU email does not match your School ID. For School ID $studentId, use $expectedEmail."
+                )
+
+                etEmail.requestFocus()
+
+                return@setOnClickListener
+            }
+
+
+            // =================================================
+            // PASSWORD LENGTH
+            // =================================================
+
+            if (
+                password.length < 6
+            ) {
 
                 showError(
                     tvError,
                     "Password must be at least 6 characters."
                 )
 
+                etPassword.requestFocus()
+
                 return@setOnClickListener
             }
 
-            if (password != confirmPassword) {
+
+            // =================================================
+            // PASSWORD MATCH
+            // =================================================
+
+            if (
+                password !=
+                confirmPassword
+            ) {
 
                 showError(
                     tvError,
                     "Passwords do not match."
                 )
 
+                etConfirmPassword.requestFocus()
+
                 return@setOnClickListener
             }
 
-            // -----------------------------------------------------
-            // START REGISTRATION
-            // -----------------------------------------------------
 
-            isRegistering = true
+            // =================================================
+            // BEGIN REGISTRATION
+            // =================================================
 
-            btnSignUp.isEnabled = false
-            btnSignUp.alpha = 0.6f
+            isRegistering =
+                true
 
-            tvError.visibility = View.GONE
+            btnSignUp.isEnabled =
+                false
 
-            // -----------------------------------------------------
-            // FIREBASE AUTHENTICATION
-            // -----------------------------------------------------
+            btnSignUp.alpha =
+                0.6f
+
+            tvError.visibility =
+                View.GONE
+
+
+            // =================================================
+            // FIREBASE AUTH
+            // =================================================
 
             auth.createUserWithEmailAndPassword(
                 email,
                 password
-            ).addOnCompleteListener { task ->
+            )
+                .addOnCompleteListener {
+                        task ->
 
-                if (task.isSuccessful) {
 
-                    val firebaseUser = auth.currentUser
+                    if (
+                        task.isSuccessful
+                    ) {
 
-                    if (firebaseUser == null) {
+                        val firebaseUser =
+                            auth.currentUser
 
-                        resetSignUpButton(btnSignUp)
 
-                        showError(
-                            tvError,
-                            "Account creation failed. Please try again."
-                        )
+                        if (
+                            firebaseUser ==
+                            null
+                        ) {
 
-                        return@addOnCompleteListener
-                    }
-
-                    val uid = firebaseUser.uid
-
-                    // -------------------------------------------------
-                    // STUDENT DATA FOR FIRESTORE
-                    // -------------------------------------------------
-
-                    val studentData = hashMapOf(
-                        "uid" to uid,
-                        "fullName" to fullName,
-                        "studentId" to studentId,
-                        "course" to course,
-                        "yearLevel" to yearLevel,
-                        "email" to email,
-                        "username" to username,
-                        "interest" to interest,
-                        "role" to "student",
-                        "createdAt" to System.currentTimeMillis()
-                    )
-
-                    // -------------------------------------------------
-                    // SAVE STUDENT DATA
-                    // -------------------------------------------------
-
-                    db.collection("users")
-                        .document(uid)
-                        .set(studentData)
-                        .addOnSuccessListener {
-
-                            resetSignUpButton(btnSignUp)
-
-                            Toast.makeText(
-                                this,
-                                "Account created successfully!",
-                                Toast.LENGTH_LONG
-                            ).show()
-
-                            finish()
-                        }
-                        .addOnFailureListener { error ->
-
-                            resetSignUpButton(btnSignUp)
+                            resetSignUpButton(
+                                btnSignUp
+                            )
 
                             showError(
                                 tvError,
-                                "Account created, but student information could not be saved. Please try again."
+                                "Account creation failed. Please try again."
                             )
 
-                            Toast.makeText(
-                                this,
-                                "Database error: ${error.message}",
-                                Toast.LENGTH_LONG
-                            ).show()
+                            return@addOnCompleteListener
                         }
 
-                } else {
 
-                    resetSignUpButton(btnSignUp)
+                        val uid =
+                            firebaseUser.uid
 
-                    val message = when {
 
-                        task.exception?.message?.contains(
-                            "already in use",
-                            ignoreCase = true
-                        ) == true -> {
-                            "This email is already registered."
-                        }
+                        // =====================================
+                        // STUDENT FIRESTORE DATA
+                        // =====================================
 
-                        task.exception?.message?.contains(
-                            "badly formatted",
-                            ignoreCase = true
-                        ) == true -> {
-                            "Invalid email address."
-                        }
+                        val studentData =
+                            hashMapOf(
 
-                        task.exception?.message?.contains(
-                            "network",
-                            ignoreCase = true
-                        ) == true -> {
-                            "Network error. Please check your internet connection."
-                        }
+                                "uid" to uid,
 
-                        else -> {
-                            "Unable to create account. Please try again."
-                        }
+                                "fullName" to
+                                        fullName,
+
+                                "studentId" to
+                                        studentId,
+
+                                "course" to
+                                        course,
+
+                                "yearLevel" to
+                                        yearLevel,
+
+                                "email" to
+                                        email,
+
+                                "username" to
+                                        username,
+
+                                "interest" to
+                                        interest,
+
+                                "role" to
+                                        "student",
+
+                                "createdAt" to
+                                        System.currentTimeMillis()
+                            )
+
+
+                        // =====================================
+                        // SAVE USER
+                        // =====================================
+
+                        db.collection(
+                            "users"
+                        )
+                            .document(
+                                uid
+                            )
+                            .set(
+                                studentData
+                            )
+                            .addOnSuccessListener {
+
+                                resetSignUpButton(
+                                    btnSignUp
+                                )
+
+                                Toast.makeText(
+                                    this,
+                                    "Account created successfully!",
+                                    Toast.LENGTH_LONG
+                                ).show()
+
+                                finish()
+                            }
+                            .addOnFailureListener {
+                                    error ->
+
+
+                                resetSignUpButton(
+                                    btnSignUp
+                                )
+
+                                showError(
+                                    tvError,
+                                    "Account created, but student information could not be saved. Please try again."
+                                )
+
+                                Toast.makeText(
+                                    this,
+                                    "Database error: ${error.message}",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+
+
+                    } else {
+
+
+                        resetSignUpButton(
+                            btnSignUp
+                        )
+
+
+                        val message =
+                            when {
+
+                                task.exception
+                                    ?.message
+                                    ?.contains(
+                                        "already in use",
+                                        ignoreCase = true
+                                    ) == true -> {
+
+                                    "This student email is already registered."
+                                }
+
+
+                                task.exception
+                                    ?.message
+                                    ?.contains(
+                                        "badly formatted",
+                                        ignoreCase = true
+                                    ) == true -> {
+
+                                    "Invalid student email address."
+                                }
+
+
+                                task.exception
+                                    ?.message
+                                    ?.contains(
+                                        "network",
+                                        ignoreCase = true
+                                    ) == true -> {
+
+                                    "Network error. Please check your internet connection."
+                                }
+
+
+                                else -> {
+
+                                    "Unable to create account. Please try again."
+                                }
+                            }
+
+
+                        showError(
+                            tvError,
+                            message
+                        )
                     }
-
-                    showError(tvError, message)
                 }
-            }
         }
     }
 
-    // -------------------------------------------------------------
+
+    // =========================================================
     // PASSWORD VISIBILITY
-    // -------------------------------------------------------------
+    // =========================================================
 
     private fun togglePasswordVisibility(
         editText: EditText,
@@ -334,13 +634,17 @@ class StudentSignUpActivity : AppCompatActivity() {
         isVisible: Boolean
     ) {
 
-        if (isVisible) {
+        if (
+            isVisible
+        ) {
 
             editText.inputType =
                 InputType.TYPE_CLASS_TEXT or
                         InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
 
-            icon.setImageResource(R.drawable.ic_eye_off)
+            icon.setImageResource(
+                R.drawable.ic_eye_off
+            )
 
         } else {
 
@@ -348,36 +652,50 @@ class StudentSignUpActivity : AppCompatActivity() {
                 InputType.TYPE_CLASS_TEXT or
                         InputType.TYPE_TEXT_VARIATION_PASSWORD
 
-            icon.setImageResource(R.drawable.ic_eye)
+            icon.setImageResource(
+                R.drawable.ic_eye
+            )
         }
 
-        editText.setSelection(editText.text.length)
+
+        editText.setSelection(
+            editText.text.length
+        )
     }
 
-    // -------------------------------------------------------------
+
+    // =========================================================
     // SHOW ERROR
-    // -------------------------------------------------------------
+    // =========================================================
 
     private fun showError(
         tvError: TextView,
         message: String
     ) {
 
-        tvError.text = message
-        tvError.visibility = View.VISIBLE
+        tvError.text =
+            message
+
+        tvError.visibility =
+            View.VISIBLE
     }
 
-    // -------------------------------------------------------------
-    // RESET SIGN UP BUTTON
-    // -------------------------------------------------------------
+
+    // =========================================================
+    // RESET BUTTON
+    // =========================================================
 
     private fun resetSignUpButton(
         btnSignUp: LinearLayout
     ) {
 
-        isRegistering = false
+        isRegistering =
+            false
 
-        btnSignUp.isEnabled = true
-        btnSignUp.alpha = 1.0f
+        btnSignUp.isEnabled =
+            true
+
+        btnSignUp.alpha =
+            1.0f
     }
 }

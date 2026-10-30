@@ -1,72 +1,186 @@
 package com.example.kayara
 
+import android.animation.ValueAnimator
 import android.content.Intent
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.LinearGradient
+import android.graphics.Paint
+import android.graphics.PixelFormat
+import android.graphics.Shader
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.view.WindowManager
+import androidx.core.view.WindowInsetsControllerCompat
 import android.view.View
-import android.widget.FrameLayout
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 
 class SuperAdminDashboardActivity : AppCompatActivity() {
 
-    private lateinit var fragmentContainer: FrameLayout
-    private lateinit var fab: ImageView
-
-    private lateinit var navHome: View
-    private lateinit var navOrganizations: View
-    private lateinit var navNotifications: View
-    private lateinit var navDocuments: View
+    private lateinit var navHome: LinearLayout
+    private lateinit var navOrganizations: LinearLayout
+    private lateinit var navNotifications: LinearLayout
+    private lateinit var navDocuments: LinearLayout
 
     private lateinit var iconHome: ImageView
     private lateinit var iconOrganizations: ImageView
     private lateinit var iconNotifications: ImageView
     private lateinit var iconDocuments: ImageView
 
-    private lateinit var underlineHome: View
-    private lateinit var underlineOrganizations: View
-    private lateinit var underlineNotifications: View
-    private lateinit var underlineDocuments: View
+    private lateinit var labelHome: TextView
+    private lateinit var labelOrganizations: TextView
+    private lateinit var labelNotifications: TextView
+    private lateinit var labelDocuments: TextView
 
-    private val activeColor = android.graphics.Color.parseColor("#173F7A")
-    private val inactiveColor = android.graphics.Color.parseColor("#AAB7C8")
+    private var selectedPosition = 0
+
+    private var backgroundAnimator: ValueAnimator? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_super_admin_dashboard)
+        // =====================================================
+        // SYSTEM BAR
+        // =====================================================
 
-        // ---------------------------------------------------------
-        // MAIN VIEWS
-        // ---------------------------------------------------------
+        window.statusBarColor =
+            Color.parseColor("#1E5FD9")
 
-        fragmentContainer = findViewById(R.id.fragmentContainer)
-        fab = findViewById(R.id.fab)
+        window.navigationBarColor =
+            Color.parseColor("#EEF5FC")
 
-        // ---------------------------------------------------------
-        // BOTTOM NAVIGATION
-        // ---------------------------------------------------------
+        WindowCompat
+            .getInsetsController(
+                window,
+                window.decorView
+            ).apply {
 
-        navHome = findViewById(R.id.navHome)
-        navOrganizations = findViewById(R.id.navOrganizations)
-        navNotifications = findViewById(R.id.navNotifications)
-        navDocuments = findViewById(R.id.navDocuments)
+                isAppearanceLightStatusBars = false
+                isAppearanceLightNavigationBars = true
+            }
 
-        iconHome = findViewById(R.id.iconHome)
-        iconOrganizations = findViewById(R.id.iconOrganizations)
-        iconNotifications = findViewById(R.id.iconNotifications)
-        iconDocuments = findViewById(R.id.iconDocuments)
+        setupSystemBars(
+            Color.parseColor("#1E5FD9"),
+            Color.parseColor("#EEF5FC")
+        )
 
-        underlineHome = findViewById(R.id.underlineHome)
-        underlineOrganizations = findViewById(R.id.underlineOrganizations)
-        underlineNotifications = findViewById(R.id.underlineNotifications)
-        underlineDocuments = findViewById(R.id.underlineDocuments)
+        setContentView(
+            R.layout.activity_super_admin_dashboard
+        )
 
-        // ---------------------------------------------------------
+        setContentView(
+            R.layout.activity_super_admin_dashboard
+        )
+
+        // =====================================================
+        // NAVIGATION
+        // =====================================================
+
+        navHome =
+            findViewById(R.id.navHome)
+
+        navOrganizations =
+            findViewById(R.id.navOrganizations)
+
+        navNotifications =
+            findViewById(R.id.navNotifications)
+
+        navDocuments =
+            findViewById(R.id.navDocuments)
+
+        iconHome =
+            findViewById(R.id.iconHome)
+
+        iconOrganizations =
+            findViewById(R.id.iconOrganizations)
+
+        iconNotifications =
+            findViewById(R.id.iconNotifications)
+
+        iconDocuments =
+            findViewById(R.id.iconDocuments)
+
+        labelHome =
+            findViewById(R.id.labelHome)
+
+        labelOrganizations =
+            findViewById(R.id.labelOrganizations)
+
+        labelNotifications =
+            findViewById(R.id.labelNotifications)
+
+        labelDocuments =
+            findViewById(R.id.labelDocuments)
+
+        // =====================================================
+        // BACKGROUND
+        // =====================================================
+
+        startAnimatedBackground()
+
+        // =====================================================
+        // NAV CLICKS
+        // =====================================================
+
+        navHome.setOnClickListener {
+
+            if (selectedPosition != 0) {
+                showHome()
+            }
+        }
+
+        navOrganizations.setOnClickListener {
+
+            if (selectedPosition != 1) {
+                showOrganizations()
+            }
+        }
+
+        navNotifications.setOnClickListener {
+
+            if (selectedPosition != 2) {
+                showNotifications()
+            }
+        }
+
+        navDocuments.setOnClickListener {
+
+            if (selectedPosition != 3) {
+                showDocuments()
+            }
+        }
+
+        // =====================================================
+        // CHAT
+        // =====================================================
+
+        findViewById<View>(
+            R.id.btnChat
+        ).setOnClickListener {
+
+            openAdminsGroupChat(
+                this,
+                true
+            )
+        }
+
+        // =====================================================
         // PROFILE
-        // ---------------------------------------------------------
+        // =====================================================
 
-        findViewById<FrameLayout>(R.id.btnProfile).setOnClickListener {
+        findViewById<View>(
+            R.id.btnProfile
+        ).setOnClickListener {
+
             startActivity(
                 Intent(
                     this,
@@ -75,138 +189,550 @@ class SuperAdminDashboardActivity : AppCompatActivity() {
             )
         }
 
-        // ---------------------------------------------------------
-        // DEFAULT TAB
-        // ---------------------------------------------------------
+        // =====================================================
+        // FIRST SCREEN
+        // =====================================================
 
         if (savedInstanceState == null) {
+
             showHome()
+
+        } else {
+
+            updateBottomNav(
+                selectedPosition
+            )
         }
 
-        // ---------------------------------------------------------
-        // NAVIGATION
-        // ---------------------------------------------------------
-
-        navHome.setOnClickListener {
-            showHome()
-        }
-
-        navOrganizations.setOnClickListener {
-            showOrganizations()
-        }
-
-        navNotifications.setOnClickListener {
-            showNotifications()
-        }
-
-        navDocuments.setOnClickListener {
-            showDocuments()
-        }
+        setupBackButton()
     }
 
-    // =============================================================
+    // =========================================================
     // HOME
-    // =============================================================
+    // =========================================================
 
     private fun showHome() {
 
-        loadFragment(DashboardFragment())
-
-        fab.visibility = View.GONE
-
-        setActiveTab(
-            activeIcon = iconHome,
-            activeUnderline = underlineHome
+        openFragment(
+            DashboardFragment()
         )
+
+        updateBottomNav(0)
     }
 
-    // =============================================================
-    // ORGANIZATIONS
-    // =============================================================
+    private fun setupSystemBars(
+        statusBarColor: Int,
+        navigationBarColor: Int
+    ) {
 
-    private fun showOrganizations() {
-
-        loadFragment(OrganizationsFragment())
-
-        fab.visibility = View.VISIBLE
-
-        setActiveTab(
-            activeIcon = iconOrganizations,
-            activeUnderline = underlineOrganizations
+        WindowCompat.setDecorFitsSystemWindows(
+            window,
+            true
         )
 
-        fab.setOnClickListener {
-            // Existing OrganizationsFragment/FAB functionality
-            // can remain connected here.
+        window.clearFlags(
+            WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+        )
+
+        window.addFlags(
+            WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
+        )
+
+        window.statusBarColor =
+            statusBarColor
+
+        window.navigationBarColor =
+            navigationBarColor
+
+        WindowInsetsControllerCompat(
+            window,
+            window.decorView
+        ).apply {
+
+            isAppearanceLightStatusBars =
+                false
+
+            isAppearanceLightNavigationBars =
+                true
         }
     }
 
-    // =============================================================
+    // =========================================================
+    // ORGANIZATIONS
+    // =========================================================
+
+    private fun showOrganizations() {
+
+        openFragment(
+            OrganizationsFragment()
+        )
+
+        updateBottomNav(1)
+    }
+
+    // =========================================================
     // NOTIFICATIONS
-    // =============================================================
+    // =========================================================
 
     private fun showNotifications() {
 
-        loadFragment(NotificationsFragment())
-
-        fab.visibility = View.GONE
-
-        setActiveTab(
-            activeIcon = iconNotifications,
-            activeUnderline = underlineNotifications
+        openFragment(
+            NotificationsFragment()
         )
+
+        updateBottomNav(2)
     }
 
-    // =============================================================
+    // =========================================================
     // DOCUMENTS
-    // =============================================================
+    // =========================================================
 
     private fun showDocuments() {
 
-        loadFragment(DocumentsFragment())
-
-        fab.visibility = View.GONE
-
-        setActiveTab(
-            activeIcon = iconDocuments,
-            activeUnderline = underlineDocuments
+        openFragment(
+            DocumentsFragment()
         )
+
+        updateBottomNav(3)
     }
 
-    // =============================================================
-    // CHANGE SELECTED NAVIGATION ITEM
-    // =============================================================
+    // =========================================================
+    // FRAGMENT TRANSITION
+    // =========================================================
 
-    private fun setActiveTab(
-        activeIcon: ImageView,
-        activeUnderline: View
+    private fun openFragment(
+        fragment: Fragment
     ) {
 
-        // All icons inactive
-        iconHome.setColorFilter(inactiveColor)
-        iconOrganizations.setColorFilter(inactiveColor)
-        iconNotifications.setColorFilter(inactiveColor)
-        iconDocuments.setColorFilter(inactiveColor)
+        if (
+            isFinishing ||
+            isDestroyed
+        ) {
+            return
+        }
 
-        // All underlines invisible
-        underlineHome.visibility = View.INVISIBLE
-        underlineOrganizations.visibility = View.INVISIBLE
-        underlineNotifications.visibility = View.INVISIBLE
-        underlineDocuments.visibility = View.INVISIBLE
-
-        // Selected item
-        activeIcon.setColorFilter(activeColor)
-        activeUnderline.visibility = View.VISIBLE
+        supportFragmentManager
+            .beginTransaction()
+            .setCustomAnimations(
+                android.R.anim.fade_in,
+                android.R.anim.fade_out
+            )
+            .replace(
+                R.id.fragmentContainer,
+                fragment
+            )
+            .commit()
     }
 
-    // =============================================================
-    // FRAGMENT LOADER
-    // =============================================================
+    // =========================================================
+    // BOTTOM NAV TRANSITION
+    // =========================================================
 
-    private fun loadFragment(fragment: Fragment) {
+    private fun updateBottomNav(
+        selectedPosition: Int
+    ) {
 
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainer, fragment)
-            .commit()
+        this.selectedPosition =
+            selectedPosition
+
+        val icons =
+            listOf(
+                iconHome,
+                iconOrganizations,
+                iconNotifications,
+                iconDocuments
+            )
+
+        val labels =
+            listOf(
+                labelHome,
+                labelOrganizations,
+                labelNotifications,
+                labelDocuments
+            )
+
+        val activeColor =
+            Color.parseColor(
+                "#1E5FD9"
+            )
+
+        val inactiveColor =
+            Color.parseColor(
+                "#AAB7C8"
+            )
+
+        val density =
+            resources
+                .displayMetrics
+                .density
+
+        icons.forEachIndexed {
+                index,
+                icon ->
+
+            val selected =
+                index == selectedPosition
+
+            icon.animate().cancel()
+            labels[index].animate().cancel()
+
+            icon.setColorFilter(
+                if (selected) {
+                    activeColor
+                } else {
+                    inactiveColor
+                }
+            )
+
+            labels[index].setTextColor(
+                if (selected) {
+                    activeColor
+                } else {
+                    inactiveColor
+                }
+            )
+
+            if (selected) {
+
+                val bubble =
+                    GradientDrawable().apply {
+
+                        shape =
+                            GradientDrawable.OVAL
+
+                        setColor(
+                            Color.WHITE
+                        )
+
+                        setStroke(
+                            (1f * density).toInt(),
+                            Color.parseColor(
+                                "#DCE8FF"
+                            )
+                        )
+                    }
+
+                icon.background =
+                    bubble
+
+                icon.elevation =
+                    10f * density
+
+                icon.alpha = 0.80f
+                icon.scaleX = 0.92f
+                icon.scaleY = 0.92f
+
+                icon.animate()
+                    .translationY(
+                        -18f * density
+                    )
+                    .scaleX(1.15f)
+                    .scaleY(1.15f)
+                    .alpha(1f)
+                    .setDuration(300L)
+                    .setInterpolator(
+                        AccelerateDecelerateInterpolator()
+                    )
+                    .start()
+
+                labels[index]
+                    .animate()
+                    .translationY(
+                        -6f * density
+                    )
+                    .alpha(1f)
+                    .setDuration(300L)
+                    .setInterpolator(
+                        AccelerateDecelerateInterpolator()
+                    )
+                    .start()
+
+            } else {
+
+                icon.animate()
+                    .translationY(0f)
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .alpha(0.68f)
+                    .setDuration(250L)
+                    .setInterpolator(
+                        AccelerateDecelerateInterpolator()
+                    )
+                    .withEndAction {
+
+                        if (
+                            index !=
+                            this.selectedPosition
+                        ) {
+
+                            icon.background =
+                                ColorDrawable(
+                                    Color.TRANSPARENT
+                                )
+
+                            icon.elevation =
+                                0f
+                        }
+                    }
+                    .start()
+
+                labels[index]
+                    .animate()
+                    .translationY(0f)
+                    .alpha(0.72f)
+                    .setDuration(250L)
+                    .start()
+            }
+        }
+    }
+
+    // =========================================================
+    // ANIMATED BLUE BACKGROUND
+    // =========================================================
+
+    private fun startAnimatedBackground() {
+
+        val root =
+            findViewById<View>(
+                R.id.rootDashboard
+            )
+
+        val header =
+            findViewById<View>(
+                R.id.headerLayout
+            )
+
+        val rootDrawable =
+            AnimatedPaletteDrawable()
+
+        val headerDrawable =
+            AnimatedPaletteDrawable()
+
+        // IMPORTANT:
+        // Same animated palette sa root ug header.
+        // Mao ni para dili lahi ang color makita sa curved edges.
+
+        root.background =
+            rootDrawable
+
+        header.background =
+            headerDrawable
+
+        backgroundAnimator?.cancel()
+
+        backgroundAnimator =
+            ValueAnimator
+                .ofFloat(
+                    0f,
+                    1f
+                )
+                .apply {
+
+                    duration =
+                        9000L
+
+                    repeatCount =
+                        ValueAnimator.INFINITE
+
+                    repeatMode =
+                        ValueAnimator.REVERSE
+
+                    addUpdateListener {
+                            animator ->
+
+                        val phase =
+                            animator
+                                .animatedValue
+                                    as Float
+
+                        rootDrawable.phase =
+                            phase
+
+                        headerDrawable.phase =
+                            phase
+
+                        rootDrawable.invalidateSelf()
+                        headerDrawable.invalidateSelf()
+                    }
+
+                    start()
+                }
+    }
+
+    // =========================================================
+    // BACK BUTTON
+    // =========================================================
+
+    private fun setupBackButton() {
+
+        onBackPressedDispatcher
+            .addCallback(
+                this,
+                object :
+                    OnBackPressedCallback(true) {
+
+                    override fun handleOnBackPressed() {
+
+                        val currentFragment =
+                            supportFragmentManager
+                                .findFragmentById(
+                                    R.id.fragmentContainer
+                                )
+
+                        if (
+                            currentFragment is
+                                    SuperAdminApplicationReviewFragment
+                        ) {
+
+                            supportFragmentManager
+                                .popBackStack()
+
+                            return
+                        }
+
+                        if (
+                            currentFragment is
+                                    OrganizationsFragment
+                        ) {
+
+                            showHome()
+                            return
+                        }
+
+                        if (
+                            currentFragment is
+                                    NotificationsFragment
+                        ) {
+
+                            showHome()
+                            return
+                        }
+
+                        if (
+                            currentFragment is
+                                    DocumentsFragment
+                        ) {
+
+                            showHome()
+                            return
+                        }
+
+                        if (
+                            currentFragment is
+                                    DashboardFragment
+                        ) {
+
+                            finish()
+                            return
+                        }
+
+                        finish()
+                    }
+                }
+            )
+    }
+
+    // =========================================================
+    // DRAWABLE
+    // =========================================================
+
+    private class AnimatedPaletteDrawable :
+        Drawable() {
+
+        private val paint =
+            Paint(
+                Paint.ANTI_ALIAS_FLAG
+            )
+
+        var phase:
+                Float = 0f
+
+        override fun draw(
+            canvas: Canvas
+        ) {
+
+            val width =
+                bounds
+                    .width()
+                    .toFloat()
+
+            val height =
+                bounds
+                    .height()
+                    .toFloat()
+
+            if (
+                width <= 0f ||
+                height <= 0f
+            ) {
+                return
+            }
+
+            val shift =
+                width *
+                        0.35f *
+                        phase
+
+            paint.shader =
+                LinearGradient(
+                    -shift,
+                    0f,
+                    width + shift,
+                    height,
+                    intArrayOf(
+                        Color.parseColor("#0B2E6B"),
+                        Color.parseColor("#1E5FD9"),
+                        Color.parseColor("#2D7CF7")
+                    ),
+                    floatArrayOf(
+                        0f,
+                        0.55f,
+                        1f
+                    ),
+                    Shader.TileMode.CLAMP
+                )
+
+            canvas.drawRect(
+                bounds,
+                paint
+            )
+        }
+
+        override fun setAlpha(
+            alpha: Int
+        ) {
+
+            paint.alpha =
+                alpha
+        }
+
+        override fun setColorFilter(
+            colorFilter:
+            android.graphics.ColorFilter?
+        ) {
+
+            paint.colorFilter =
+                colorFilter
+        }
+
+        @Deprecated(
+            "Deprecated in Java"
+        )
+        override fun getOpacity():
+                Int {
+
+            return PixelFormat.TRANSLUCENT
+        }
+    }
+
+    override fun onDestroy() {
+
+        backgroundAnimator
+            ?.cancel()
+
+        backgroundAnimator =
+            null
+
+        super.onDestroy()
     }
 }

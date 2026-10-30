@@ -1,7 +1,7 @@
 package com.example.kayara
 
 import android.app.Dialog
-import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -9,15 +9,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
+import android.app.Activity
+import android.content.Intent
+
 
 class BrowseOrgsFragment : Fragment() {
 
@@ -30,128 +34,39 @@ class BrowseOrgsFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
 
-    private val organizations = listOf(
+    // Maximum number of organizations a student can join
+    private val MAX_ORGANIZATIONS = 3
 
-        OrganizationModel(
-            "Aspiring Criminologist of the Philippines Society",
-            "ACOPS",
-            54,
-            "Organization Adviser",
-            "available",
-            "#263238",
-            "#455A64"
-        ),
+    // FIX: gikan sa Firestore (parehas sa Super Admin)
+    private var baseOrganizations: List<OrganizationModel> = emptyList()
 
-        OrganizationModel(
-            "BISU Balilihan Choir",
-            "BBC",
-            32,
-            "Organization Adviser",
-            "available",
-            "#00838F",
-            "#006064"
-        ),
+    // FIX: organizationId -> status ("approved" / "pending" / "rejected")
+    private val membershipStatus = mutableMapOf<String, String>()
 
-        OrganizationModel(
-            "Chosen Generation Organization",
-            "CGO",
-            47,
-            "Organization Adviser",
-            "available",
-            "#7B1FA2",
-            "#6A1B9A"
-        ),
+    private var organizationsListener: ListenerRegistration? = null
+    private var membershipsListener: ListenerRegistration? = null
 
-        OrganizationModel(
-            "Computer Science Guild",
-            "CSG",
-            68,
-            "Organization Adviser",
-            "available",
-            "#1976D2",
-            "#1565C0"
-        ),
+    // organizationId -> pila ka approved members (para sa FULL status)
+    private val approvedCounts = mutableMapOf<String, Int>()
+    private var approvedCountsListener: ListenerRegistration? = null
 
-        OrganizationModel(
-            "First Aiders Guild",
-            "FAG",
-            41,
-            "Organization Adviser",
-            "available",
-            "#D32F2F",
-            "#B71C1C"
-        ),
+    // =========================================================
+    // FILE PICKER (para sa documents nga gi-require sa organization)
+    // =========================================================
 
-        OrganizationModel(
-            "Mayors League Organizations",
-            "MLO",
-            38,
-            "Organization Adviser",
-            "available",
-            "#F9A825",
-            "#F57F17"
-        ),
+    private var pendingPickCallback: ((Uri) -> Unit)? = null
 
-        OrganizationModel(
-            "Peer Facilitator",
-            "PF",
-            29,
-            "Organization Adviser",
-            "available",
-            "#00897B",
-            "#00695C"
-        ),
+    private val pickDocumentLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.OpenDocument()
+        ) { uri ->
 
-        OrganizationModel(
-            "Prime Synergy",
-            "PS",
-            36,
-            "Organization Adviser",
-            "available",
-            "#8E24AA",
-            "#6A1B9A"
-        ),
+            if (uri != null) {
+                pendingPickCallback?.invoke(uri)
+            }
 
-        OrganizationModel(
-            "Society of Electrical Technology",
-            "SET",
-            45,
-            "Organization Adviser",
-            "available",
-            "#EF6C00",
-            "#E65100"
-        ),
-
-        OrganizationModel(
-            "Supreme Student Government",
-            "SSG",
-            85,
-            "Organization Adviser",
-            "available",
-            "#0D47A1",
-            "#1565C0"
-        ),
-
-        OrganizationModel(
-            "The Campus Access",
-            "TCA",
-            27,
-            "Organization Adviser",
-            "available",
-            "#00838F",
-            "#006064"
-        ),
-
-        OrganizationModel(
-            "World Changes",
-            "WC",
-            34,
-            "Organization Adviser",
-            "available",
-            "#43A047",
-            "#2E7D32"
-        )
-    )
+            pendingPickCallback = null
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -165,76 +80,69 @@ class BrowseOrgsFragment : Fragment() {
             false
         )
 
-        // Firebase
+
+        // OPEN AI ORGANIZATION MATCHER
+
+        view.findViewById<View>(
+            R.id.btnSmartMatch
+        ).setOnClickListener {
+
+            val intent = Intent(
+                requireContext(),
+                SmartMatchActivity::class.java
+            )
+
+            smartMatchLauncher.launch(intent)
+        }
+
+
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
 
         val rvBrowseOrgs =
-            view.findViewById<RecyclerView>(
-                R.id.rvBrowseOrgs
-            )
+            view.findViewById<RecyclerView>(R.id.rvBrowseOrgs)
 
         val etSearch =
-            view.findViewById<EditText>(
-                R.id.etSearchOrgStudent
-            )
+            view.findViewById<EditText>(R.id.etSearchOrgStudent)
 
-        chipAll =
-            view.findViewById(
-                R.id.chipAllStudentOrgs
-            )
+        chipAll = view.findViewById(R.id.chipAllStudentOrgs)
+        chipJoined = view.findViewById(R.id.chipJoined)
+        chipPending = view.findViewById(R.id.chipPendingOrgs)
 
-        chipJoined =
-            view.findViewById(
-                R.id.chipJoined
-            )
-
-        chipPending =
-            view.findViewById(
-                R.id.chipPendingOrgs
-            )
-
-        // RecyclerView
         rvBrowseOrgs.layoutManager =
             LinearLayoutManager(requireContext())
 
         orgAdapter = BrowseOrgAdapter(
-            organizations
-        ) { org ->
-
-            showJoinDialog(org)
-        }
+            fullList = emptyList(),
+            onJoinClick = { org ->
+                showJoinDialog(org)
+            },
+            onOrgClick = { org ->
+                openOrganizationProfile(org)
+            }
+        )
 
         rvBrowseOrgs.adapter = orgAdapter
 
-        // Load student's memberships
-        loadMemberships()
+        listenForOrganizations()
+        listenForMemberships()
+        listenForApprovedCounts()
 
-        // All
         chipAll.setOnClickListener {
-
             setActiveChip(chipAll)
-
             orgAdapter.filter("all")
         }
 
-        // Joined
         chipJoined.setOnClickListener {
-
             setActiveChip(chipJoined)
-
             orgAdapter.filter("joined")
         }
 
-        // Pending
         chipPending.setOnClickListener {
-
             setActiveChip(chipPending)
-
             orgAdapter.filter("pending")
         }
 
-        // Search
         etSearch.addTextChangedListener(
             object : TextWatcher {
 
@@ -252,10 +160,7 @@ class BrowseOrgsFragment : Fragment() {
                     before: Int,
                     count: Int
                 ) {
-
-                    orgAdapter.search(
-                        s.toString()
-                    )
+                    orgAdapter.search(s.toString())
                 }
 
                 override fun afterTextChanged(
@@ -268,94 +173,329 @@ class BrowseOrgsFragment : Fragment() {
         return view
     }
 
-    // =========================================================
-    // LOAD MEMBERSHIPS FROM FIRESTORE
-    // =========================================================
 
-    private fun loadMemberships() {
+    // ==========================================
+    // AI ORGANIZATION MATCHER
+    // ==========================================
 
-        val currentUser = auth.currentUser
+    private val smartMatchLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
 
-        if (currentUser == null) {
-            return
+            if (
+                result.resultCode == Activity.RESULT_OK &&
+                isAdded
+            ) {
+
+                val selectedOrganizationId =
+                    result.data?.getStringExtra(
+                        SmartMatchActivity.RESULT_ORGANIZATION_ID
+                    )
+
+                val selectedOrganization =
+                    baseOrganizations.firstOrNull {
+                        it.organizationId == selectedOrganizationId
+                    }
+
+                if (selectedOrganization != null) {
+
+                    openOrganizationProfile(
+                        selectedOrganization
+                    )
+
+                } else {
+
+                    Toast.makeText(
+                        requireContext(),
+                        "Organization not found. Please refresh.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
         }
 
-        val uid = currentUser.uid
 
-        db.collection("memberships")
-            .whereEqualTo("studentId", uid)
-            .get()
-            .addOnSuccessListener { snapshot ->
+    private fun openOrganizationProfile(org: OrganizationModel) {
 
-                val membershipStatus =
-                    mutableMapOf<String, String>()
+        val fragment = OrganizationProfileFragment().apply {
+            arguments = Bundle().apply {
+                putString("organizationId", org.organizationId)
+                putString("organizationName", org.orgName)
+                putString("shortCode", org.shortCode)
+            }
+        }
 
-                for (document in snapshot.documents) {
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
 
-                    val organizationId =
-                        document.getString(
-                            "organizationId"
-                        )
+    // =========================================================
+    // FIX: LISTEN TO ORGANIZATIONS (same source as Super Admin)
+    // =========================================================
 
-                    val status =
-                        document.getString(
-                            "status"
-                        )
+    private fun listenForOrganizations() {
 
-                    if (
-                        !organizationId.isNullOrEmpty() &&
-                        !status.isNullOrEmpty()
-                    ) {
+        organizationsListener?.remove()
 
-                        membershipStatus[
-                            organizationId
-                        ] = status
+        organizationsListener =
+            db.collection("organizations")
+                .addSnapshotListener { snapshot, error ->
+
+                    if (!isAdded) {
+                        return@addSnapshotListener
                     }
-                }
 
-                val updatedOrganizations =
-                    organizations.map { org ->
+                    if (error != null) {
+
+                        Toast.makeText(
+                            requireContext(),
+                            "Unable to load organizations: ${error.message}",
+                            Toast.LENGTH_LONG
+                        ).show()
+
+                        return@addSnapshotListener
+                    }
+
+                    if (snapshot == null) {
+                        return@addSnapshotListener
+                    }
+
+                    val loaded =
+                        mutableListOf<OrganizationModel>()
+
+                    for (document in snapshot.documents) {
+
+                        val orgName =
+                            document.getString("orgName")
+                                ?.trim()
+                                ?: ""
+
+                        if (orgName.isBlank()) {
+                            continue
+                        }
+
+                        val shortCode =
+                            document.getString("shortCode")
+                                ?.trim()
+                                ?: ""
+
+                        val avatarUrl =
+                            document.getString(
+                                "avatarUrl"
+                            )
+                                ?.trim()
+                                ?: ""
+
+                        loaded.add(
+                            OrganizationModel(
+
+                                orgName =
+                                    orgName,
+
+                                shortCode =
+                                    if (shortCode.isBlank()) {
+                                        getShortCode(orgName)
+                                    } else {
+                                        shortCode
+                                    },
+
+                                memberCount =
+                                    document.getLong("memberCount")
+                                        ?.toInt()
+                                        ?: 0,
+
+                                adviserName =
+                                    document.getString("adviserName")
+                                        ?.takeIf { it.isNotBlank() }
+                                        ?: "Organization Adviser",
+
+                                category =
+                                    "available",
+
+                                colorStart =
+                                    document.getString("colorStart")
+                                        ?: "#1E5FD9",
+
+                                colorEnd =
+                                    document.getString("colorEnd")
+                                        ?: "#3FA9F5",
+
+                                recruitmentInfo =
+                                    document.getString("recruitmentInfo")
+                                        ?: "",
+
+                                // OPEN / CLOSED + member limit (gi-set sa admin)
+                                recruitmentOpen =
+                                    document.getBoolean("recruitmentOpen")
+                                        ?: true,
+
+                                recruitmentLimit =
+                                    (
+                                            document.getLong(
+                                                "recruitmentLimit"
+                                            )
+                                                ?: 0L
+                                            ).toInt(),
+
+                                organizationId =
+                                    document.id,
+
+                                avatarUrl =
+                                    avatarUrl
+
+
+                            )
+                        )
+                    }
+
+                    baseOrganizations =
+                        loaded.sortedBy {
+                            it.orgName.lowercase()
+                        }
+
+                    refreshOrganizationList()
+                }
+    }
+
+    // =========================================================
+    // FIX: LISTEN TO STUDENT MEMBERSHIPS
+    // =========================================================
+
+    private fun listenForMemberships() {
+
+        val currentUser = auth.currentUser ?: return
+
+        membershipsListener?.remove()
+
+        membershipsListener =
+            db.collection("memberships")
+                .whereEqualTo("studentId", currentUser.uid)
+                .addSnapshotListener { snapshot, error ->
+
+                    if (!isAdded) {
+                        return@addSnapshotListener
+                    }
+
+                    if (error != null) {
+
+                        Toast.makeText(
+                            requireContext(),
+                            "Unable to load memberships.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                        return@addSnapshotListener
+                    }
+
+                    membershipStatus.clear()
+
+                    snapshot?.documents?.forEach { document ->
+
+                        val orgId =
+                            document.getString("organizationId")
 
                         val status =
-                            membershipStatus[
-                                org.shortCode
-                            ]
+                            document.getString("status")
 
-                        when (status) {
-
-                            "approved" ->
-                                org.copy(
-                                    category = "joined"
-                                )
-
-                            "pending" ->
-                                org.copy(
-                                    category = "pending"
-                                )
-
-                            else ->
-                                org.copy(
-                                    category = "available"
-                                )
+                        if (
+                            !orgId.isNullOrEmpty() &&
+                            !status.isNullOrEmpty()
+                        ) {
+                            membershipStatus[orgId] = status
                         }
                     }
 
-                orgAdapter.updateList(
-                    updatedOrganizations
-                )
+                    refreshOrganizationList()
+                }
+    }
 
-                updateChipCounts(
-                    updatedOrganizations
-                )
-            }
-            .addOnFailureListener {
+    // =========================================================
+    // APPROVED MEMBERS PER ORGANIZATION (para sa FULL status)
+    // =========================================================
 
-                Toast.makeText(
-                    requireContext(),
-                    "Unable to load memberships.",
-                    Toast.LENGTH_SHORT
-                ).show()
+    private fun listenForApprovedCounts() {
+
+        approvedCountsListener?.remove()
+
+        approvedCountsListener =
+            db.collection("memberships")
+                .whereEqualTo("status", "approved")
+                .addSnapshotListener { snapshot, error ->
+
+                    if (!isAdded || error != null || snapshot == null) {
+                        return@addSnapshotListener
+                    }
+
+                    approvedCounts.clear()
+
+                    snapshot.documents.forEach { document ->
+
+                        val orgId =
+                            document.getString("organizationId")
+
+                        if (!orgId.isNullOrBlank()) {
+                            approvedCounts[orgId] =
+                                (approvedCounts[orgId] ?: 0) + 1
+                        }
+                    }
+
+                    refreshOrganizationList()
+                }
+    }
+
+    // =========================================================
+    // FIX: COMBINE ORGANIZATIONS + MEMBERSHIP STATUS
+    // =========================================================
+
+    private fun refreshOrganizationList() {
+
+        if (!isAdded) {
+            return
+        }
+
+        val updatedOrganizations =
+            baseOrganizations.map { org ->
+
+                when (membershipStatus[org.organizationId]) {
+
+                    "approved" ->
+                        org.copy(category = "joined")
+
+                    "pending" ->
+                        org.copy(category = "pending")
+
+                    else -> {
+
+                        val approved =
+                            approvedCounts[org.organizationId] ?: 0
+
+                        val status =
+                            when {
+                                !org.recruitmentOpen ->
+                                    "closed"
+
+                                org.recruitmentLimit > 0 &&
+                                        approved >= org.recruitmentLimit ->
+                                    "full"
+
+                                else ->
+                                    "open"
+                            }
+
+                        org.copy(
+                            category = "available",
+                            recruitmentStatus = status
+                        )
+                    }
+                }
             }
+
+        orgAdapter.updateList(updatedOrganizations)
+
+        updateChipCounts(updatedOrganizations)
     }
 
     // =========================================================
@@ -367,23 +507,14 @@ class BrowseOrgsFragment : Fragment() {
     ) {
 
         val joinedCount =
-            list.count {
-                it.category == "joined"
-            }
+            list.count { it.category == "joined" }
 
         val pendingCount =
-            list.count {
-                it.category == "pending"
-            }
+            list.count { it.category == "pending" }
 
-        chipAll.text =
-            "All (${list.size})"
-
-        chipJoined.text =
-            "Joined ($joinedCount)"
-
-        chipPending.text =
-            "Pending ($pendingCount)"
+        chipAll.text = "All (${list.size})"
+        chipJoined.text = "Joined ($joinedCount)"
+        chipPending.text = "Pending ($pendingCount)"
     }
 
     // =========================================================
@@ -395,38 +526,24 @@ class BrowseOrgsFragment : Fragment() {
     ) {
 
         val allChips =
-            listOf(
-                chipAll,
-                chipJoined,
-                chipPending
-            )
+            listOf(chipAll, chipJoined, chipPending)
 
         allChips.forEach { chip ->
 
             if (chip == activeChip) {
 
-                chip.setBackgroundResource(
-                    R.drawable.bg_chip_active
-                )
+                chip.setBackgroundResource(R.drawable.bg_chip_active)
 
                 chip.setTextColor(
-                    resources.getColor(
-                        R.color.white,
-                        null
-                    )
+                    resources.getColor(R.color.white, null)
                 )
 
             } else {
 
-                chip.setBackgroundResource(
-                    R.drawable.bg_chip
-                )
+                chip.setBackgroundResource(R.drawable.bg_chip)
 
                 chip.setTextColor(
-                    resources.getColor(
-                        R.color.text_gray,
-                        null
-                    )
+                    resources.getColor(R.color.text_gray, null)
                 )
             }
         }
@@ -434,96 +551,36 @@ class BrowseOrgsFragment : Fragment() {
 
     // =========================================================
     // JOIN DIALOG
+    // Ipakita ang recruitment info/files sa org ug ipa-upload
+    // ang documents nga gi-require (tan-awa ang JoinOrgDialog).
     // =========================================================
 
     private fun showJoinDialog(
         org: OrganizationModel
     ) {
 
-        val dialog =
-            Dialog(requireContext())
+        JoinOrgDialog(
+            fragment = this,
+            org = org,
 
-        val dialogView =
-            LayoutInflater.from(
-                requireContext()
-            ).inflate(
-                R.layout.dialog_join_org,
-                null
-            )
+            requestFile = { onPicked ->
 
-        dialog.setContentView(dialogView)
+                pendingPickCallback = onPicked
 
-        dialog.window?.setBackgroundDrawable(
-            ColorDrawable(
-                android.graphics.Color.TRANSPARENT
-            )
-        )
+                pickDocumentLauncher.launch(DOCUMENT_MIME_TYPES)
+            },
 
-        dialog.window?.setGravity(
-            android.view.Gravity.BOTTOM
-        )
+            onSubmit = { message, documents, dialog, button ->
 
-        val tvTitle =
-            dialogView.findViewById<TextView>(
-                R.id.tvJoinDialogTitle
-            )
-
-        val recruitmentBanner =
-            dialogView.findViewById<LinearLayout>(
-                R.id.recruitmentInfoBanner
-            )
-
-        val tvRecruitmentText =
-            dialogView.findViewById<TextView>(
-                R.id.tvRecruitmentInfoText
-            )
-
-        val etJoinMessage =
-            dialogView.findViewById<EditText>(
-                R.id.etJoinMessage
-            )
-
-        val btnCancel =
-            dialogView.findViewById<TextView>(
-                R.id.btnCancelJoin
-            )
-
-        val btnSubmit =
-            dialogView.findViewById<TextView>(
-                R.id.btnSubmitJoin
-            )
-
-        tvTitle.text =
-            "Join ${org.orgName}"
-
-        recruitmentBanner.visibility =
-            View.GONE
-
-        btnCancel.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        btnSubmit.setOnClickListener {
-
-            val message =
-                etJoinMessage.text
-                    .toString()
-                    .trim()
-
-            submitJoinRequest(
-                org = org,
-                message = message,
-                dialog = dialog,
-                button = btnSubmit
-            )
-        }
-
-        dialog.show()
-
-        dialog.window?.setLayout(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
+                submitJoinRequest(
+                    org = org,
+                    message = message,
+                    dialog = dialog,
+                    button = button,
+                    documents = documents
+                )
+            }
+        ).show()
     }
 
     // =========================================================
@@ -534,7 +591,8 @@ class BrowseOrgsFragment : Fragment() {
         org: OrganizationModel,
         message: String,
         dialog: Dialog,
-        button: TextView
+        button: TextView,
+        documents: List<Map<String, Any>> = emptyList()
     ) {
 
         val currentUser = auth.currentUser
@@ -550,57 +608,187 @@ class BrowseOrgsFragment : Fragment() {
             return
         }
 
+        if (org.organizationId.isBlank()) {
+
+            Toast.makeText(
+                requireContext(),
+                "Organization ID not found.",
+                Toast.LENGTH_SHORT
+            ).show()
+
+            return
+        }
+
         val uid = currentUser.uid
 
-        // Prevent duplicate request
-        val membershipId =
-            "${uid}_${org.shortCode}"
+        // FIX: tinuod nga organization ID (document.id)
+        val realOrgId = org.organizationId
 
         button.isEnabled = false
         button.alpha = 0.6f
 
-        val membershipData =
-            hashMapOf<String, Any>(
-
-                "studentId" to uid,
-
-                "organizationId" to
-                        org.shortCode,
-
-                "organizationName" to
-                        org.orgName,
-
-                "shortCode" to
-                        org.shortCode,
-
-                "adviserName" to
-                        org.adviserName,
-
-                "status" to
-                        "pending",
-
-                "applicationNote" to
-                        message,
-
-                "dateApplied" to
-                        FieldValue.serverTimestamp()
-            )
-
         db.collection("memberships")
-            .document(membershipId)
-            .set(membershipData)
-            .addOnSuccessListener {
+            .whereEqualTo("studentId", uid)
+            .get()
+            .addOnSuccessListener { snapshot ->
 
-                Toast.makeText(
-                    requireContext(),
-                    "Request to join ${org.orgName} sent!",
-                    Toast.LENGTH_LONG
-                ).show()
+                // approved AND pending ang giihap
+                val activeCount =
+                    snapshot.documents.count { document ->
 
-                dialog.dismiss()
+                        val status = document.getString("status")
 
-                // Refresh organization statuses
-                loadMemberships()
+                        status == "approved" || status == "pending"
+                    }
+
+                if (activeCount >= MAX_ORGANIZATIONS) {
+
+                    button.isEnabled = true
+                    button.alpha = 1f
+
+                    Toast.makeText(
+                        requireContext(),
+                        "You can only join or request a maximum of 3 organizations.",
+                        Toast.LENGTH_LONG
+                    ).show()
+
+                    dialog.dismiss()
+
+                    return@addOnSuccessListener
+                }
+
+                val membershipId = "${uid}_$realOrgId"
+
+                db.collection("memberships")
+                    .document(membershipId)
+                    .get()
+                    .addOnSuccessListener { existingDocument ->
+
+                        if (existingDocument.exists()) {
+
+                            val existingStatus =
+                                existingDocument.getString("status")
+
+                            if (existingStatus == "approved") {
+
+                                button.isEnabled = true
+                                button.alpha = 1f
+
+                                Toast.makeText(
+                                    requireContext(),
+                                    "You are already a member of ${org.orgName}.",
+                                    Toast.LENGTH_LONG
+                                ).show()
+
+                                dialog.dismiss()
+
+                                return@addOnSuccessListener
+                            }
+
+                            if (existingStatus == "pending") {
+
+                                button.isEnabled = true
+                                button.alpha = 1f
+
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Your request to ${org.orgName} is still pending.",
+                                    Toast.LENGTH_LONG
+                                ).show()
+
+                                dialog.dismiss()
+
+                                return@addOnSuccessListener
+                            }
+                            // "rejected" = allowed to apply again
+                        }
+
+                        db.collection("users")
+                            .document(uid)
+                            .get()
+                            .addOnSuccessListener { userDocument ->
+
+                                val fullName =
+                                    userDocument.getString("fullName")
+                                        ?: currentUser.displayName
+                                        ?: "A student"
+
+                                val membershipData =
+                                    hashMapOf<String, Any>(
+                                        "studentId" to uid,
+                                        "fullName" to fullName,
+                                        "organizationId" to realOrgId,
+                                        "organizationName" to org.orgName,
+                                        "shortCode" to org.shortCode,
+                                        "adviserName" to org.adviserName,
+                                        "status" to "pending",
+                                        "applicationNote" to message,
+                                        "submittedDocuments" to documents,
+                                        "dateApplied" to FieldValue.serverTimestamp()
+                                    )
+
+                                db.collection("memberships")
+                                    .document(membershipId)
+                                    .set(membershipData)
+                                    .addOnSuccessListener {
+
+                                        createAdminNotification(
+                                            organizationId = realOrgId,
+
+                                            studentName = fullName,
+
+                                            organizationName = org.orgName,
+
+                                            membershipId = membershipId,
+
+                                            studentId = uid
+                                        )
+
+                                        Toast.makeText(
+                                            requireContext(),
+                                            "Request to join ${org.orgName} sent!",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+
+                                        dialog.dismiss()
+                                        // wala na kinahanglan i-reload:
+                                        // real-time na ang membership listener
+                                    }
+                                    .addOnFailureListener {
+
+                                        button.isEnabled = true
+                                        button.alpha = 1f
+
+                                        Toast.makeText(
+                                            requireContext(),
+                                            "Failed to send join request.",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                    }
+                            }
+                            .addOnFailureListener {
+
+                                button.isEnabled = true
+                                button.alpha = 1f
+
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Unable to load your profile.",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                    }
+                    .addOnFailureListener {
+
+                        button.isEnabled = true
+                        button.alpha = 1f
+
+                        Toast.makeText(
+                            requireContext(),
+                            "Unable to check existing membership.",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
             }
             .addOnFailureListener {
 
@@ -609,9 +797,90 @@ class BrowseOrgsFragment : Fragment() {
 
                 Toast.makeText(
                     requireContext(),
-                    "Failed to send join request.",
+                    "Unable to check your organization limit.",
                     Toast.LENGTH_LONG
                 ).show()
             }
+    }
+
+    // =========================================================
+    // CREATE ADMIN NOTIFICATION
+    // =========================================================
+
+
+    private fun createAdminNotification(
+        organizationId: String,
+        studentName: String,
+        organizationName: String,
+        membershipId: String = "",
+        studentId: String = ""
+    ) {
+
+        if (organizationId.isBlank()) {
+            return
+        }
+
+        AdminNotificationHelper.create(
+            organizationId = organizationId,
+
+            organizationName = organizationName,
+
+            title = "New Membership Application",
+
+            message = "$studentName applied to join $organizationName.",
+
+            type = "membership_application",
+
+            referenceId = membershipId,
+
+            studentId = studentId
+        )
+    }
+
+    // =========================================================
+    // SHORT CODE (parehas sa Super Admin)
+    // =========================================================
+
+    private fun getShortCode(
+        organizationName: String
+    ): String {
+
+        val words =
+            organizationName
+                .trim()
+                .split(Regex("\\s+"))
+                .filter { it.isNotBlank() }
+
+        if (words.isEmpty()) {
+            return "ORG"
+        }
+
+        if (words.size == 1) {
+            return words[0].take(3).uppercase()
+        }
+
+        return words
+            .take(3)
+            .map { it.first() }
+            .joinToString("")
+            .uppercase()
+    }
+
+    // =========================================================
+    // CLEANUP
+    // =========================================================
+
+    override fun onDestroyView() {
+
+        organizationsListener?.remove()
+        organizationsListener = null
+
+        membershipsListener?.remove()
+        membershipsListener = null
+
+        approvedCountsListener?.remove()
+        approvedCountsListener = null
+
+        super.onDestroyView()
     }
 }

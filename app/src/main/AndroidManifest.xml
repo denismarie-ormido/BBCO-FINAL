@@ -3,8 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
+        android:name=".KayaraApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -14,77 +16,136 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.KAYARA"
         android:usesCleartextTraffic="true">
+
         <activity
             android:name=".WelcomeActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
+
         <activity
             android:name=".SuperAdminLoginActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name=".AdminLoginActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name=".StudentLoginActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name=".AdminSignUpActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name=".StudentSignUpActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name=".SuperAdminDashboardActivity"
             android:exported="false" />
+
         <activity
             android:name=".AdminDashboardActivity"
             android:exported="false" />
+
         <activity
             android:name=".StudentDashboardActivity"
             android:exported="false" />
+
         <activity
             android:name=".PostAnnouncementActivity"
             android:exported="false" />
+
         <activity
             android:name=".ReviewDocumentsActivity"
             android:exported="false" />
+
         <activity
             android:name=".ManageAdminsActivity"
             android:exported="false" />
+
         <activity
             android:name=".NotificationsActivity"
             android:exported="false" />
+
         <activity
             android:name=".SuperAdminProfileActivity"
             android:exported="false" />
+
         <activity
             android:name=".AdminNotificationsActivity"
             android:exported="false" />
+
         <activity
             android:name=".AdminProfileActivity"
             android:exported="false" />
+
         <activity
             android:name=".EditOrgProfileActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name=".FolderDocumentsActivity"
             android:exported="false" />
+
         <activity
             android:name=".EditStudentProfileActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".OrganizationProfileActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".AdminResubmitActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".RenewalRequestActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".RenewalReviewActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ChatActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".EventsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".CreateEventActivity"
+            android:exported="false" />
+
+
+        <activity
+            android:name=".SmartMatchActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmartMatchSheet" />
+
+
     </application>
 
 </manifest>

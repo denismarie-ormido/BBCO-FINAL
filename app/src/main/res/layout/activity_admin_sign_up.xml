@@ -1,463 +1,1349 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="#F4F7FC">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:fillViewport="true"
+        android:overScrollMode="never"
+        android:clipToPadding="false">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <!-- Curved header -->
-            <FrameLayout
-                android:id="@+id/headerCurve"
-                android:layout_width="0dp"
-                android:layout_height="200dp"
-                android:background="@drawable/bg_header_curve_admin"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+            <!-- ===================================================== -->
+            <!-- HERO -->
+            <!-- ===================================================== -->
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="297dp"
+                android:background="@drawable/bg_v2_header_admin">
+
+                <!-- Decorative circles (para sa depth) -->
+
+                <View
+                    android:layout_width="210dp"
+                    android:layout_height="210dp"
+                    android:background="@drawable/bg_auth_deco_circle"
+                    android:translationX="70dp"
+                    android:translationY="-80dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:layout_width="130dp"
+                    android:layout_height="130dp"
+                    android:background="@drawable/bg_auth_deco_ring"
+                    android:translationX="40dp"
+                    android:translationY="20dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:background="@drawable/bg_auth_deco_circle"
+                    android:translationX="-60dp"
+                    android:translationY="30dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
 
                 <ImageView
                     android:id="@+id/btnBack"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_margin="20dp"
-                    android:padding="9dp"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_marginStart="22dp"
+                    android:layout_marginTop="22dp"
                     android:background="@drawable/bg_back_circle"
-                    android:src="@drawable/ic_back_arrow"
-                    app:tint="@color/white"
-                    android:contentDescription="@string/back"
                     android:clickable="true"
-                    android:focusable="true" />
+                    android:contentDescription="@string/back"
+                    android:focusable="true"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_back_arrow"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/white" />
+
+                <TextView
+                    android:id="@+id/tvHeroLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:letterSpacing="0.14"
+                    android:text="KAYARA • BBCO"
+                    android:textColor="#BFD3F5"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@id/btnBack"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/btnBack" />
 
                 <FrameLayout
-                    android:layout_width="86dp"
-                    android:layout_height="86dp"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="6dp"
-                    android:background="@drawable/bg_header_icon_circle">
+                    android:id="@+id/headerIconContainer"
+                    android:layout_width="82dp"
+                    android:layout_height="82dp"
+                    android:layout_marginTop="28dp"
+                    android:background="@drawable/bg_header_icon_circle"
+                    android:elevation="6dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/btnBack">
 
                     <ImageView
-                        android:layout_width="38dp"
-                        android:layout_height="38dp"
+                        android:layout_width="37dp"
+                        android:layout_height="37dp"
                         android:layout_gravity="center"
+                        android:contentDescription="@null"
                         android:src="@drawable/ic_person"
-                        app:tint="@color/white"
-                        android:contentDescription="@null" />
-                </FrameLayout>
-            </FrameLayout>
+                        app:tint="@color/white" />
 
-            <!-- Content -->
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/tvHeroTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="Join as an Organization Admin"
+                    android:textColor="@color/white"
+                    android:textSize="21sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/headerIconContainer" />
+
+                <TextView
+                    android:id="@+id/tvHeroSubtitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginEnd="50dp"
+                    android:gravity="center"
+                    android:lineSpacingExtra="2dp"
+                    android:text="Register your organization and submit it for Super Admin verification."
+                    android:textColor="#DCE8FA"
+                    android:textSize="11.5sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvHeroTitle" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <!-- ===================================================== -->
+            <!-- CONTENT (floating cards) -->
+            <!-- ===================================================== -->
+
             <LinearLayout
                 android:id="@+id/contentLayout"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="-34dp"
                 android:orientation="vertical"
-                android:paddingHorizontal="28dp"
-                android:paddingTop="24dp"
-                android:paddingBottom="30dp"
-                app:layout_constraintTop_toBottomOf="@id/headerCurve"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="10dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Register Organization"
-                    android:textColor="@color/dark_blue"
-                    android:textSize="22sp"
-                    android:textStyle="bold" />
+                <!-- ================================================= -->
+                <!-- CARD 1: ORGANIZATION INFORMATION -->
+                <!-- ================================================= -->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="Create your Admin/Adviser account"
-                    android:textColor="@color/text_gray"
-                    android:textSize="12.5sp" />
-
-                <!-- Full Name -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="54dp"
-                    android:layout_marginTop="22dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:background="@drawable/bg_pill_input_blue"
-                    android:paddingHorizontal="18dp">
-
-                    <ImageView
-                        android:layout_width="19dp"
-                        android:layout_height="19dp"
-                        android:src="@drawable/ic_person"
-                        app:tint="@color/placeholder_gray"
-                        android:contentDescription="@null" />
-
-                    <EditText
-                        android:id="@+id/etFullName"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="12dp"
-                        android:background="@null"
-                        android:hint="Full Name"
-                        android:textColorHint="@color/placeholder_gray"
-                        android:textColor="@color/dark_blue"
-                        android:textSize="13.5sp"
-                        android:inputType="textPersonName"
-                        android:autofillHints="name" />
-                </LinearLayout>
-
-                <!-- Organization Name -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="54dp"
-                    android:layout_marginTop="12dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:background="@drawable/bg_pill_input_blue"
-                    android:paddingHorizontal="18dp">
-
-                    <ImageView
-                        android:layout_width="19dp"
-                        android:layout_height="19dp"
-                        android:src="@drawable/ic_building"
-                        app:tint="@color/placeholder_gray"
-                        android:contentDescription="@null" />
-
-                    <EditText
-                        android:id="@+id/etOrgName"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="12dp"
-                        android:background="@null"
-                        android:hint="Organization Name"
-                        android:textColorHint="@color/placeholder_gray"
-                        android:textColor="@color/dark_blue"
-                        android:textSize="13.5sp"
-                        android:inputType="text" />
-                </LinearLayout>
-
-                <!-- Description -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:orientation="horizontal"
-                    android:background="@drawable/bg_pill_input_blue"
-                    android:paddingHorizontal="18dp"
-                    android:paddingVertical="14dp"
-                    android:minHeight="54dp">
+                    android:orientation="vertical"
+                    android:background="@drawable/bg_auth_card"
+                    android:elevation="6dp"
+                    android:padding="20dp">
 
-                    <ImageView
-                        android:layout_width="19dp"
-                        android:layout_height="19dp"
-                        android:layout_marginTop="2dp"
-                        android:src="@drawable/ic_notes"
-                        android:contentDescription="@null" />
+                    <!-- Progress -->
 
-                    <EditText
-                        android:id="@+id/etDescription"
-                        android:layout_width="0dp"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="12dp"
-                        android:background="@null"
-                        android:hint="What is the organization about?"
-                        android:textColorHint="@color/placeholder_gray"
-                        android:textColor="@color/dark_blue"
-                        android:textSize="13.5sp"
-                        android:inputType="textMultiLine|textCapSentences"
-                        android:minLines="2"
-                        android:maxLines="4"
-                        android:gravity="top" />
-                </LinearLayout>
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
 
-                <!-- Username -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="54dp"
-                    android:layout_marginTop="12dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:background="@drawable/bg_pill_input_blue"
-                    android:paddingHorizontal="18dp">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="REGISTRATION FORM"
+                            android:textColor="#1E5FD9"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.1" />
 
-                    <ImageView
-                        android:layout_width="19dp"
-                        android:layout_height="19dp"
-                        android:src="@drawable/ic_id_card"
-                        android:contentDescription="@null" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="STEP 1 OF 2"
+                            android:textColor="#9AA7BA"
+                            android:textSize="9.5sp"
+                            android:textStyle="bold" />
 
-                    <EditText
-                        android:id="@+id/etUsername"
-                        android:layout_width="0dp"
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="12dp"
-                        android:background="@null"
-                        android:hint="Username (e.g. juan.rcy)"
-                        android:textColorHint="@color/placeholder_gray"
-                        android:textColor="@color/dark_blue"
-                        android:textSize="13.5sp"
-                        android:inputType="text"
-                        android:autofillHints="username" />
-                </LinearLayout>
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginStart="4dp"
-                    android:text="Tip: combine your name and org (e.g. mreyes.rcy)"
-                    android:textColor="#9BA9C2"
-                    android:textSize="10.5sp" />
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="5dp"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="6dp"
+                            android:background="@drawable/bg_v2_header_admin" />
 
-                <!-- Email -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="54dp"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:background="@drawable/bg_pill_input_blue"
-                    android:paddingHorizontal="18dp">
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="5dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_auth_progress_off" />
 
-                    <ImageView
-                        android:layout_width="19dp"
-                        android:layout_height="19dp"
-                        android:src="@drawable/ic_mail"
-                        android:contentDescription="@null" />
+                    </LinearLayout>
 
-                    <EditText
-                        android:id="@+id/etEmail"
-                        android:layout_width="0dp"
+                    <!-- Section header -->
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="12dp"
-                        android:background="@null"
-                        android:hint="Email Address"
-                        android:textColorHint="@color/placeholder_gray"
-                        android:textColor="@color/dark_blue"
-                        android:textSize="13.5sp"
-                        android:inputType="textEmailAddress"
-                        android:autofillHints="emailAddress" />
-                </LinearLayout>
+                        android:layout_marginTop="22dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
 
-                <!-- Password -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="54dp"
-                    android:layout_marginTop="12dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:background="@drawable/bg_pill_input_blue"
-                    android:paddingHorizontal="18dp">
+                        <TextView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:background="@drawable/bg_auth_badge"
+                            android:gravity="center"
+                            android:text="1"
+                            android:textColor="#1E5FD9"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
 
-                    <ImageView
-                        android:layout_width="19dp"
-                        android:layout_height="19dp"
-                        android:src="@drawable/ic_lock"
-                        android:contentDescription="@null" />
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="12dp"
+                            android:orientation="vertical">
 
-                    <EditText
-                        android:id="@+id/etPassword"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="12dp"
-                        android:background="@null"
-                        android:hint="Password"
-                        android:textColorHint="@color/placeholder_gray"
-                        android:textColor="@color/dark_blue"
-                        android:textSize="13.5sp"
-                        android:inputType="textPassword"
-                        android:autofillHints="password" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Organization Information"
+                                android:textColor="@color/dark_blue"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
 
-                    <ImageView
-                        android:id="@+id/btnTogglePassword"
-                        android:layout_width="19dp"
-                        android:layout_height="19dp"
-                        android:src="@drawable/ic_eye"
-                        android:contentDescription="@string/toggle_password"
-                        android:clickable="true"
-                        android:focusable="true" />
-                </LinearLayout>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="Tell us about the organization you represent."
+                                android:textColor="@color/text_gray"
+                                android:textSize="11sp" />
 
-                <!-- Confirm Password -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="54dp"
-                    android:layout_marginTop="12dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:background="@drawable/bg_pill_input_blue"
-                    android:paddingHorizontal="18dp">
+                        </LinearLayout>
 
-                    <ImageView
-                        android:layout_width="19dp"
-                        android:layout_height="19dp"
-                        android:src="@drawable/ic_lock"
-                        android:contentDescription="@null" />
+                    </LinearLayout>
 
-                    <EditText
-                        android:id="@+id/etConfirmPassword"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="12dp"
-                        android:background="@null"
-                        android:hint="Confirm Password"
-                        android:textColorHint="@color/placeholder_gray"
-                        android:textColor="@color/dark_blue"
-                        android:textSize="13.5sp"
-                        android:inputType="textPassword"
-                        android:autofillHints="password" />
-
-                    <ImageView
-                        android:id="@+id/btnToggleConfirmPassword"
-                        android:layout_width="19dp"
-                        android:layout_height="19dp"
-                        android:src="@drawable/ic_eye"
-                        android:contentDescription="@string/toggle_password"
-                        android:clickable="true"
-                        android:focusable="true" />
-                </LinearLayout>
-
-                <!-- Upload requirement documents -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="18dp"
-                    android:text="Requirement Documents"
-                    android:textColor="@color/dark_blue"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:text="Upload your org's registration or accreditation document"
-                    android:textColor="@color/text_gray"
-                    android:textSize="11sp" />
-
-                <LinearLayout
-                    android:id="@+id/uploadCard"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    android:background="@drawable/bg_upload_dashed"
-                    android:padding="16dp"
-                    android:clickable="true"
-                    android:focusable="true">
-
-                    <ImageView
-                        android:layout_width="34dp"
-                        android:layout_height="34dp"
-                        android:padding="9dp"
-                        android:background="@drawable/bg_qa_circle_blue"
-                        android:src="@drawable/ic_upload"
-                        app:tint="@color/white"
-                        android:contentDescription="@null" />
+                    <!-- Admin name -->
 
                     <TextView
-                        android:id="@+id/tvSelectedFile"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="12dp"
-                        android:text="Tap to upload document (PDF, JPG, PNG)"
-                        android:textColor="@color/text_gray"
-                        android:textSize="11.5sp" />
+                        android:layout_marginTop="18dp"
+                        android:text="ADMIN NAME"
+                        android:textColor="#718096"
+                        android:textSize="9.5sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.08" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:layout_marginTop="7dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/bg_pill_input_blue"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp">
+
+                        <ImageView
+                            android:layout_width="19dp"
+                            android:layout_height="19dp"
+                            android:src="@drawable/ic_person"
+                            app:tint="#7890B5"
+                            android:contentDescription="@null" />
+
+                        <EditText
+                            android:id="@+id/etFullName"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="11dp"
+                            android:background="@null"
+                            android:hint="Enter your full name"
+                            android:textColorHint="@color/placeholder_gray"
+                            android:textColor="@color/dark_blue"
+                            android:textSize="13sp"
+                            android:inputType="textPersonName"
+                            android:autofillHints="name" />
+
+                    </LinearLayout>
+
+                    <!-- Organization name -->
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:text="ORGANIZATION NAME"
+                        android:textColor="#718096"
+                        android:textSize="9.5sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.08" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:layout_marginTop="7dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/bg_pill_input_blue"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp">
+
+                        <ImageView
+                            android:layout_width="19dp"
+                            android:layout_height="19dp"
+                            android:src="@drawable/ic_building"
+                            app:tint="#7890B5"
+                            android:contentDescription="@null" />
+
+                        <EditText
+                            android:id="@+id/etOrgName"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="11dp"
+                            android:background="@null"
+                            android:hint="Enter organization name"
+                            android:textColorHint="@color/placeholder_gray"
+                            android:textColor="@color/dark_blue"
+                            android:textSize="13sp"
+                            android:inputType="textCapWords" />
+
+                    </LinearLayout>
+
+                    <!-- Description -->
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:text="ORGANIZATION DESCRIPTION"
+                        android:textColor="#718096"
+                        android:textSize="9.5sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.08" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="92dp"
+                        android:layout_marginTop="7dp"
+                        android:orientation="horizontal"
+                        android:background="@drawable/bg_pill_input_blue"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:paddingTop="14dp"
+                        android:paddingBottom="14dp">
+
+                        <ImageView
+                            android:layout_width="19dp"
+                            android:layout_height="19dp"
+                            android:src="@drawable/ic_notes"
+                            app:tint="#7890B5"
+                            android:contentDescription="@null" />
+
+                        <EditText
+                            android:id="@+id/etDescription"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:layout_marginStart="11dp"
+                            android:background="@null"
+                            android:hint="Briefly describe your organization..."
+                            android:textColorHint="@color/placeholder_gray"
+                            android:textColor="@color/dark_blue"
+                            android:textSize="13sp"
+                            android:inputType="textMultiLine|textCapSentences"
+                            android:minLines="3"
+                            android:maxLines="4"
+                            android:gravity="top" />
+
+                    </LinearLayout>
+
                 </LinearLayout>
 
-                <!-- Approval note -->
+
+
+
+                <!-- ================================================= -->
+                <!-- CARD 2: ACCOUNT DETAILS -->
+                <!-- ================================================= -->
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="14dp"
+                    android:orientation="vertical"
+                    android:background="@drawable/bg_auth_card"
+                    android:elevation="4dp"
+                    android:padding="20dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:background="@drawable/bg_auth_badge"
+                            android:gravity="center"
+                            android:text="2"
+                            android:textColor="#1E5FD9"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="12dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Account Details"
+                                android:textColor="@color/dark_blue"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="Create the login credentials for your organization."
+                                android:textColor="@color/text_gray"
+                                android:textSize="11sp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <!-- Username -->
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="18dp"
+                        android:text="ORGANIZATION USERNAME"
+                        android:textColor="#718096"
+                        android:textSize="9.5sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.08" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:layout_marginTop="7dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/bg_pill_input_blue"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp">
+
+                        <ImageView
+                            android:layout_width="19dp"
+                            android:layout_height="19dp"
+                            android:src="@drawable/ic_id_card"
+                            app:tint="#7890B5"
+                            android:contentDescription="@null" />
+
+                        <EditText
+                            android:id="@+id/etUsername"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="11dp"
+                            android:background="@null"
+                            android:hint="Create organization username"
+                            android:textColorHint="@color/placeholder_gray"
+                            android:textColor="@color/dark_blue"
+                            android:textSize="13sp"
+                            android:inputType="text"
+                            android:autofillHints="username" />
+
+                    </LinearLayout>
+
+                    <!-- Email -->
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:text="EMAIL ADDRESS"
+                        android:textColor="#718096"
+                        android:textSize="9.5sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.08" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:layout_marginTop="7dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/bg_pill_input_blue"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp">
+
+                        <ImageView
+                            android:layout_width="19dp"
+                            android:layout_height="19dp"
+                            android:src="@drawable/ic_mail"
+                            app:tint="#7890B5"
+                            android:contentDescription="@null" />
+
+                        <EditText
+                            android:id="@+id/etEmail"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="11dp"
+                            android:background="@null"
+                            android:hint="Enter your email"
+                            android:textColorHint="@color/placeholder_gray"
+                            android:textColor="@color/dark_blue"
+                            android:textSize="13sp"
+                            android:inputType="textEmailAddress"
+                            android:autofillHints="emailAddress" />
+
+                    </LinearLayout>
+
+                    <!-- Password -->
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:text="PASSWORD"
+                        android:textColor="#718096"
+                        android:textSize="9.5sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.08" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:layout_marginTop="7dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/bg_pill_input_blue"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp">
+
+                        <ImageView
+                            android:layout_width="19dp"
+                            android:layout_height="19dp"
+                            android:src="@drawable/ic_lock"
+                            app:tint="#7890B5"
+                            android:contentDescription="@null" />
+
+                        <EditText
+                            android:id="@+id/etPassword"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="11dp"
+                            android:background="@null"
+                            android:hint="Create a password"
+                            android:textColorHint="@color/placeholder_gray"
+                            android:textColor="@color/dark_blue"
+                            android:textSize="13sp"
+                            android:inputType="textPassword"
+                            android:autofillHints="password" />
+
+                        <ImageView
+                            android:id="@+id/btnTogglePassword"
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:padding="2dp"
+                            android:src="@drawable/ic_eye"
+                            app:tint="#7890B5"
+                            android:contentDescription="@string/toggle_password"
+                            android:clickable="true"
+                            android:focusable="true" />
+
+                    </LinearLayout>
+
+                    <!-- Confirm password -->
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:text="CONFIRM PASSWORD"
+                        android:textColor="#718096"
+                        android:textSize="9.5sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.08" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:layout_marginTop="7dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/bg_pill_input_blue"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp">
+
+                        <ImageView
+                            android:layout_width="19dp"
+                            android:layout_height="19dp"
+                            android:src="@drawable/ic_lock"
+                            app:tint="#7890B5"
+                            android:contentDescription="@null" />
+
+                        <EditText
+                            android:id="@+id/etConfirmPassword"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="11dp"
+                            android:background="@null"
+                            android:hint="Re-enter your password"
+                            android:textColorHint="@color/placeholder_gray"
+                            android:textColor="@color/dark_blue"
+                            android:textSize="13sp"
+                            android:inputType="textPassword"
+                            android:autofillHints="password" />
+
+                        <ImageView
+                            android:id="@+id/btnToggleConfirmPassword"
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:padding="2dp"
+                            android:src="@drawable/ic_eye"
+                            app:tint="#7890B5"
+                            android:contentDescription="@string/toggle_password"
+                            android:clickable="true"
+                            android:focusable="true" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+                <!-- ================================================= -->
+                <!-- CARD 3: VERIFICATION DOCUMENTS -->
+                <!-- ================================================= -->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:orientation="vertical"
+                    android:background="@drawable/bg_auth_card"
+                    android:elevation="4dp"
+                    android:padding="20dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:background="@drawable/bg_auth_badge"
+                            android:gravity="center"
+                            android:text="3"
+                            android:textColor="#1E5FD9"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="12dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Verification Documents"
+                                android:textColor="@color/dark_blue"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="Please upload all 5 required documents for new organization verification."
+                                android:textColor="@color/text_gray"
+                                android:textSize="11sp"
+                                android:lineSpacingExtra="2dp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+
+                    <!-- DOCUMENT 1 -->
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:background="@drawable/bg_auth_badge"
+                            android:gravity="center"
+                            android:text="1"
+                            android:textColor="#1E5FD9"
+                            android:textSize="10.5sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="9dp"
+                            android:text="POLICE CLEARANCE OF LEAD ORGANIZER"
+                            android:textColor="#718096"
+                            android:textSize="9.5sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.03" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/uploadCard1"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/bg_upload_dashed"
+                        android:paddingStart="14dp"
+                        android:paddingEnd="14dp"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <FrameLayout
+                            android:layout_width="46dp"
+                            android:layout_height="46dp"
+                            android:background="@drawable/bg_qa_circle_blue">
+
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_upload"
+                                app:tint="@color/white"
+                                android:contentDescription="@null" />
+
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="13dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tvSelectedFile1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Choose file"
+                                android:textColor="@color/dark_blue"
+                                android:textSize="12.5sp"
+                                android:textStyle="bold"
+                                android:maxLines="2"
+                                android:ellipsize="middle" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                android:text="PDF, JPG or PNG • Tap to browse"
+                                android:textColor="#8A98AB"
+                                android:textSize="10sp" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="›"
+                            android:textColor="#1E5FD9"
+                            android:textSize="26sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+
+                    <!-- DOCUMENT 2 -->
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="18dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:background="@drawable/bg_auth_badge"
+                            android:gravity="center"
+                            android:text="2"
+                            android:textColor="#1E5FD9"
+                            android:textSize="10.5sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="9dp"
+                            android:text="PROPOSED CONSTITUTION AND BY-LAWS"
+                            android:textColor="#718096"
+                            android:textSize="9.5sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.03" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/uploadCard2"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/bg_upload_dashed"
+                        android:paddingStart="14dp"
+                        android:paddingEnd="14dp"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <FrameLayout
+                            android:layout_width="46dp"
+                            android:layout_height="46dp"
+                            android:background="@drawable/bg_qa_circle_blue">
+
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_upload"
+                                app:tint="@color/white"
+                                android:contentDescription="@null" />
+
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="13dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tvSelectedFile2"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Choose file"
+                                android:textColor="@color/dark_blue"
+                                android:textSize="12.5sp"
+                                android:textStyle="bold"
+                                android:maxLines="2"
+                                android:ellipsize="middle" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                android:text="PDF, JPG or PNG • Tap to browse"
+                                android:textColor="#8A98AB"
+                                android:textSize="10sp" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="›"
+                            android:textColor="#1E5FD9"
+                            android:textSize="26sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+
+                    <!-- DOCUMENT 3 -->
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="18dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:background="@drawable/bg_auth_badge"
+                            android:gravity="center"
+                            android:text="3"
+                            android:textColor="#1E5FD9"
+                            android:textSize="10.5sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="9dp"
+                            android:text="LIST OF MEMBERS • MINIMUM 30 MEMBERS"
+                            android:textColor="#718096"
+                            android:textSize="9.5sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.03" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/uploadCard3"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/bg_upload_dashed"
+                        android:paddingStart="14dp"
+                        android:paddingEnd="14dp"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <FrameLayout
+                            android:layout_width="46dp"
+                            android:layout_height="46dp"
+                            android:background="@drawable/bg_qa_circle_blue">
+
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_upload"
+                                app:tint="@color/white"
+                                android:contentDescription="@null" />
+
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="13dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tvSelectedFile3"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Choose file"
+                                android:textColor="@color/dark_blue"
+                                android:textSize="12.5sp"
+                                android:textStyle="bold"
+                                android:maxLines="2"
+                                android:ellipsize="middle" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                android:text="PDF, JPG or PNG • Tap to browse"
+                                android:textColor="#8A98AB"
+                                android:textSize="10sp" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="›"
+                            android:textColor="#1E5FD9"
+                            android:textSize="26sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+
+                    <!-- DOCUMENT 4 -->
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="18dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:background="@drawable/bg_auth_badge"
+                            android:gravity="center"
+                            android:text="4"
+                            android:textColor="#1E5FD9"
+                            android:textSize="10.5sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="9dp"
+                            android:text="TWO NOMINEES FOR ORGANIZATION ADVISER"
+                            android:textColor="#718096"
+                            android:textSize="9.5sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.03" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/uploadCard4"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/bg_upload_dashed"
+                        android:paddingStart="14dp"
+                        android:paddingEnd="14dp"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <FrameLayout
+                            android:layout_width="46dp"
+                            android:layout_height="46dp"
+                            android:background="@drawable/bg_qa_circle_blue">
+
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_upload"
+                                app:tint="@color/white"
+                                android:contentDescription="@null" />
+
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="13dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tvSelectedFile4"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Choose file"
+                                android:textColor="@color/dark_blue"
+                                android:textSize="12.5sp"
+                                android:textStyle="bold"
+                                android:maxLines="2"
+                                android:ellipsize="middle" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                android:text="PDF, JPG or PNG • Tap to browse"
+                                android:textColor="#8A98AB"
+                                android:textSize="10sp" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="›"
+                            android:textColor="#1E5FD9"
+                            android:textSize="26sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+
+                    <!-- DOCUMENT 5 -->
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="18dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:background="@drawable/bg_auth_badge"
+                            android:gravity="center"
+                            android:text="5"
+                            android:textColor="#1E5FD9"
+                            android:textSize="10.5sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="9dp"
+                            android:text="ANNUAL WORK PLAN OF ACTIVITIES"
+                            android:textColor="#718096"
+                            android:textSize="9.5sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.03" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/uploadCard5"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:background="@drawable/bg_upload_dashed"
+                        android:paddingStart="14dp"
+                        android:paddingEnd="14dp"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <FrameLayout
+                            android:layout_width="46dp"
+                            android:layout_height="46dp"
+                            android:background="@drawable/bg_qa_circle_blue">
+
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_upload"
+                                app:tint="@color/white"
+                                android:contentDescription="@null" />
+
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="13dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tvSelectedFile5"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Choose file"
+                                android:textColor="@color/dark_blue"
+                                android:textSize="12.5sp"
+                                android:textStyle="bold"
+                                android:maxLines="2"
+                                android:ellipsize="middle" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                android:text="PDF, JPG or PNG • Tap to browse"
+                                android:textColor="#8A98AB"
+                                android:textSize="10sp" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="›"
+                            android:textColor="#1E5FD9"
+                            android:textSize="26sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+                <!-- ================================================= -->
+                <!-- APPROVAL NOTICE -->
+                <!-- ================================================= -->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
                     android:orientation="horizontal"
                     android:background="@drawable/bg_alert_banner"
-                    android:padding="12dp">
+                    android:padding="14dp">
 
                     <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:layout_marginTop="1dp"
                         android:src="@drawable/ic_alert"
                         app:tint="@color/amber_text"
                         android:contentDescription="@null" />
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_marginStart="9dp"
-                        android:text="Your account will be reviewed by the Super Admin before it's activated."
-                        android:textColor="#7A4F0B"
-                        android:textSize="11sp"
-                        android:lineSpacingExtra="2dp" />
+                        android:layout_marginStart="10dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Before you can log in"
+                            android:textColor="#7A4F0B"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:text="Super Admin will review your organization details and all 5 required documents. Your account will stay pending until approved."
+                            android:textColor="#7A4F0B"
+                            android:textSize="10.5sp"
+                            android:lineSpacingExtra="2dp" />
+
+                    </LinearLayout>
+
                 </LinearLayout>
 
-                <!-- Error message -->
+
+                <!-- Error -->
+
                 <TextView
                     android:id="@+id/tvError"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="12dp"
                     android:text=""
-                    android:textColor="#E53935"
-                    android:textSize="12.5sp"
+                    android:textColor="#D93025"
+                    android:textSize="12sp"
                     android:visibility="gone" />
 
+
                 <!-- Submit -->
+
                 <LinearLayout
                     android:id="@+id/btnSignUp"
                     android:layout_width="match_parent"
-                    android:layout_height="54dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="18dp"
+                    android:orientation="horizontal"
                     android:gravity="center"
                     android:background="@drawable/bg_pill_btn_admin"
+                    android:elevation="6dp"
                     android:clickable="true"
                     android:focusable="true">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="SUBMIT FOR APPROVAL"
+                        android:text="SUBMIT REGISTRATION"
                         android:textColor="@color/white"
-                        android:textSize="14sp"
+                        android:textSize="13.5sp"
                         android:textStyle="bold"
-                        android:letterSpacing="0.04" />
+                        android:letterSpacing="0.07" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="→"
+                        android:textColor="@color/white"
+                        android:textSize="17sp"
+                        android:textStyle="bold" />
+
                 </LinearLayout>
+
+
+                <!-- Login -->
 
                 <TextView
                     android:id="@+id/tvGoToLogin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="18dp"
-                    android:layout_gravity="center_horizontal"
-                    android:text="Already have an account? Login"
-                    android:textColor="@color/text_gray"
-                    android:textSize="12.5sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="14dp"
+                    android:gravity="center"
+                    android:background="@drawable/bg_auth_outline_btn"
+                    android:text="Already registered?  Login"
+                    android:textColor="#1E5FD9"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
                     android:clickable="true"
                     android:focusable="true" />
 
             </LinearLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <!-- Bottom spacing -->
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="30dp" />
+
+        </LinearLayout>
+
     </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

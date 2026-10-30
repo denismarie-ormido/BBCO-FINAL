@@ -3,83 +3,102 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootDashboard"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_light">
+    android:background="#0B2E6B"
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
-    <!-- ========================================================= -->
-    <!-- SUPER ADMIN HEADER -->
-    <!-- ========================================================= -->
+
+    <!-- ===================================================== -->
+    <!-- SUPER ADMIN HEADER                                    -->
+    <!-- ===================================================== -->
 
     <LinearLayout
         android:id="@+id/headerLayout"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_height="101dp"
         android:background="@drawable/bg_header_gradient"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp"
-        android:paddingTop="20dp"
-        android:paddingBottom="18dp"
+        android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- ===================================================== -->
-        <!-- TOP BRAND ROW -->
-        <!-- ===================================================== -->
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="72dp"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <!-- Crown / Super Admin Logo -->
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
 
             <FrameLayout
-                android:layout_width="38dp"
-                android:layout_height="38dp"
-                android:background="@drawable/bg_org_badge">
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@drawable/bg_org_badge"
+                android:elevation="2dp">
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="19dp"
+                    android:layout_height="19dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_crown"
-                    app:tint="#FFC773"
-                    android:contentDescription="@null" />
+                    android:contentDescription="@null"
+                    app:tint="#FFD76A" />
 
             </FrameLayout>
-
-            <!-- BBCO Text -->
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
                 android:layout_weight="1"
-                android:orientation="vertical"
-                android:layout_marginStart="10dp">
+                android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/tvHeaderCampus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="BBCo · BISU Balilihan"
-                    android:textColor="#D2E2FF"
-                    android:textSize="10.5sp"
+                    android:includeFontPadding="false"
+                    android:text="BBCO · BISU Balilihan"
+                    android:textColor="#D5E5FF"
+                    android:textSize="9sp"
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/tvHeaderTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:includeFontPadding="false"
                     android:text="Campus Organization"
                     android:textColor="@color/white"
-                    android:textSize="14sp"
+                    android:textSize="13sp"
                     android:textStyle="bold" />
 
             </LinearLayout>
 
-            <!-- Profile Button -->
+            <FrameLayout
+                android:id="@+id/btnChat"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_marginEnd="7dp"
+                android:background="@drawable/bg_header_icon_btn"
+                android:clickable="true"
+                android:focusable="true"
+                android:elevation="2dp">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_chat_message"
+                    android:contentDescription="Admins group chat"
+                    app:tint="@color/white" />
+
+            </FrameLayout>
 
             <FrameLayout
                 android:id="@+id/btnProfile"
@@ -87,269 +106,276 @@
                 android:layout_height="38dp"
                 android:background="@drawable/bg_header_icon_btn"
                 android:clickable="true"
-                android:focusable="true">
+                android:focusable="true"
+                android:elevation="2dp">
 
                 <ImageView
                     android:layout_width="18dp"
                     android:layout_height="18dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_profile_person"
-                    app:tint="@color/white"
-                    android:contentDescription="@string/profile" />
+                    android:contentDescription="@string/profile"
+                    app:tint="@color/white" />
 
             </FrameLayout>
 
         </LinearLayout>
 
-        <!-- ===================================================== -->
-        <!-- ROLE -->
-        <!-- ===================================================== -->
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:background="@drawable/bg_role_pill"
-            android:paddingStart="8dp"
-            android:paddingEnd="10dp"
-            android:paddingTop="4dp"
-            android:paddingBottom="4dp"
-            android:layout_marginTop="13dp">
-
-            <ImageView
-                android:layout_width="11dp"
-                android:layout_height="11dp"
-                android:src="@drawable/ic_crown"
-                app:tint="#FFE8B8"
-                android:contentDescription="@null" />
-
-            <TextView
-                android:id="@+id/tvRoleLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:text="SUPER ADMIN"
-                android:textColor="#FFE8B8"
-                android:textSize="10sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.05" />
-
-        </LinearLayout>
-
-        <!-- ===================================================== -->
-        <!-- GREETING -->
-        <!-- ===================================================== -->
-
-        <TextView
-            android:id="@+id/tvGreeting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Good day, Super Admin"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tvSubtitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Campus Organization Overview"
-            android:textColor="#D0DFFF"
-            android:textSize="12.5sp" />
-
     </LinearLayout>
 
-
-    <!-- ========================================================= -->
-    <!-- CONTENT / FRAGMENTS -->
-    <!-- ========================================================= -->
+    <!-- ===================================================== -->
+    <!-- LIGHT CURVED CONTENT                                  -->
+    <!-- ===================================================== -->
 
     <FrameLayout
-        android:id="@+id/fragmentContainer"
+        android:id="@+id/mainContentSurface"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@color/bg_light"
-        app:layout_constraintTop_toBottomOf="@id/headerLayout"
-        app:layout_constraintBottom_toTopOf="@id/customBottomNav"
+        android:layout_marginTop="72dp"
+        android:background="@drawable/bg_header_curve_super_admin"
+        android:clipToOutline="true"
+        android:outlineProvider="background"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <FrameLayout
+            android:id="@+id/fragmentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:paddingTop="14dp"
+            android:paddingBottom="88dp"
+            tools:layout="@layout/fragment_dashboard" />
+
+    </FrameLayout>
 
 
-    <!-- ========================================================= -->
-    <!-- FLOATING ACTION BUTTON -->
-    <!-- ========================================================= -->
+    <!-- ===================================================== -->
+    <!-- FAB                                                   -->
+    <!-- ===================================================== -->
 
     <ImageView
         android:id="@+id/fab"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_marginEnd="18dp"
-        android:layout_marginBottom="14dp"
+        android:layout_marginBottom="88dp"
         android:background="@drawable/bg_fab"
-        android:padding="16dp"
+        android:padding="15dp"
         android:src="@drawable/ic_add"
-        android:elevation="8dp"
+        android:elevation="12dp"
         android:visibility="gone"
-        android:clickable="true"
-        android:focusable="true"
-        android:contentDescription="@null"
-        app:layout_constraintBottom_toTopOf="@id/customBottomNav"
+        android:contentDescription="@string/add_folder"
+        app:tint="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
 
-    <!-- ========================================================= -->
-    <!-- CUSTOM BOTTOM NAVIGATION -->
-    <!-- SAME STYLE AS ADMIN / STUDENT -->
-    <!-- ========================================================= -->
+    <!-- ===================================================== -->
+    <!-- FLOATING BOTTOM NAV                                   -->
+    <!-- ===================================================== -->
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/customBottomNav"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:background="@color/white"
-        android:paddingTop="11dp"
-        android:paddingBottom="13dp"
+        android:layout_height="78dp"
+        android:layout_marginStart="17dp"
+        android:layout_marginEnd="17dp"
+        android:layout_marginBottom="14dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:elevation="14dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
 
-        <!-- ===================================================== -->
-        <!-- HOME -->
-        <!-- ===================================================== -->
+        <View
+            android:id="@+id/navBarSurface"
+            android:layout_width="match_parent"
+            android:layout_height="66dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/bg_glass_bottom_nav"
+            android:elevation="3dp" />
+
 
         <LinearLayout
-            android:id="@+id/navHome"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:clickable="true"
-            android:focusable="true">
+            android:id="@+id/navItemsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="66dp"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:elevation="12dp">
 
-            <ImageView
-                android:id="@+id/iconHome"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_nav_dashboard"
-                app:tint="#173F7A"
-                android:contentDescription="@string/nav_home" />
 
-            <View
-                android:id="@+id/underlineHome"
-                android:layout_width="18dp"
-                android:layout_height="3dp"
-                android:layout_marginTop="7dp"
-                android:background="@drawable/bg_nav_underline"
-                android:visibility="visible" />
+            <!-- HOME -->
+
+            <LinearLayout
+                android:id="@+id/navHome"
+                android:layout_width="0dp"
+                android:layout_height="66dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:clipChildren="false"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:id="@+id/iconHome"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="9dp"
+                    android:src="@drawable/ic_nav_dashboard"
+                    app:tint="#1E5FD9"
+                    android:contentDescription="@string/nav_home" />
+
+                <TextView
+                    android:id="@+id/labelHome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-5dp"
+                    android:text="Home"
+                    android:textColor="#1E5FD9"
+                    android:textSize="8sp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:id="@+id/underlineHome"
+                    android:layout_width="1dp"
+                    android:layout_height="1dp"
+                    android:visibility="invisible" />
+
+            </LinearLayout>
+
+
+            <!-- ORGANIZATIONS -->
+
+            <LinearLayout
+                android:id="@+id/navOrganizations"
+                android:layout_width="0dp"
+                android:layout_height="66dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:clipChildren="false"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:id="@+id/iconOrganizations"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="9dp"
+                    android:src="@drawable/ic_nav_orgs"
+                    app:tint="#AAB7C8"
+                    android:contentDescription="@string/nav_organizations" />
+
+                <TextView
+                    android:id="@+id/labelOrganizations"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-5dp"
+                    android:text="Organizations"
+                    android:textColor="#AAB7C8"
+                    android:textSize="7.2sp" />
+
+                <View
+                    android:id="@+id/underlineOrganizations"
+                    android:layout_width="1dp"
+                    android:layout_height="1dp"
+                    android:visibility="invisible" />
+
+            </LinearLayout>
+
+
+            <!-- NOTIFICATIONS -->
+
+            <LinearLayout
+                android:id="@+id/navNotifications"
+                android:layout_width="0dp"
+                android:layout_height="66dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:clipChildren="false"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:id="@+id/iconNotifications"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="9dp"
+                    android:src="@drawable/ic_bell"
+                    app:tint="#AAB7C8"
+                    android:contentDescription="@string/nav_notifications" />
+
+                <TextView
+                    android:id="@+id/labelNotifications"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-5dp"
+                    android:text="Notifications"
+                    android:textColor="#AAB7C8"
+                    android:textSize="7.2sp" />
+
+                <View
+                    android:id="@+id/underlineNotifications"
+                    android:layout_width="1dp"
+                    android:layout_height="1dp"
+                    android:visibility="invisible" />
+
+            </LinearLayout>
+
+
+            <!-- DOCUMENTS -->
+
+            <LinearLayout
+                android:id="@+id/navDocuments"
+                android:layout_width="0dp"
+                android:layout_height="66dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:clipChildren="false"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:id="@+id/iconDocuments"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="9dp"
+                    android:src="@drawable/ic_nav_documents"
+                    app:tint="#AAB7C8"
+                    android:contentDescription="@string/nav_documents" />
+
+                <TextView
+                    android:id="@+id/labelDocuments"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-5dp"
+                    android:text="Documents"
+                    android:textColor="#AAB7C8"
+                    android:textSize="7.4sp" />
+
+                <View
+                    android:id="@+id/underlineDocuments"
+                    android:layout_width="1dp"
+                    android:layout_height="1dp"
+                    android:visibility="invisible" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
-
-        <!-- ===================================================== -->
-        <!-- ORGANIZATIONS -->
-        <!-- ===================================================== -->
-
-        <LinearLayout
-            android:id="@+id/navOrganizations"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:clickable="true"
-            android:focusable="true">
-
-            <ImageView
-                android:id="@+id/iconOrganizations"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_nav_orgs"
-                app:tint="#AAB7C8"
-                android:contentDescription="@string/nav_organizations" />
-
-            <View
-                android:id="@+id/underlineOrganizations"
-                android:layout_width="18dp"
-                android:layout_height="3dp"
-                android:layout_marginTop="7dp"
-                android:background="@drawable/bg_nav_underline"
-                android:visibility="invisible" />
-
-        </LinearLayout>
-
-
-        <!-- ===================================================== -->
-        <!-- NOTIFICATIONS -->
-        <!-- ===================================================== -->
-
-        <LinearLayout
-            android:id="@+id/navNotifications"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:clickable="true"
-            android:focusable="true">
-
-            <ImageView
-                android:id="@+id/iconNotifications"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_bell"
-                app:tint="#AAB7C8"
-                android:contentDescription="@string/nav_notifications" />
-
-            <View
-                android:id="@+id/underlineNotifications"
-                android:layout_width="18dp"
-                android:layout_height="3dp"
-                android:layout_marginTop="7dp"
-                android:background="@drawable/bg_nav_underline"
-                android:visibility="invisible" />
-
-        </LinearLayout>
-
-
-        <!-- ===================================================== -->
-        <!-- DOCUMENTS -->
-        <!-- ===================================================== -->
-
-        <LinearLayout
-            android:id="@+id/navDocuments"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:clickable="true"
-            android:focusable="true">
-
-            <ImageView
-                android:id="@+id/iconDocuments"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_nav_documents"
-                app:tint="#AAB7C8"
-                android:contentDescription="@string/nav_documents" />
-
-            <View
-                android:id="@+id/underlineDocuments"
-                android:layout_width="18dp"
-                android:layout_height="3dp"
-                android:layout_marginTop="7dp"
-                android:background="@drawable/bg_nav_underline"
-                android:visibility="invisible" />
-
-        </LinearLayout>
-
-    </LinearLayout>
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

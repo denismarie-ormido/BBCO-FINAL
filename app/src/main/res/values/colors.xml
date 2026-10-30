@@ -43,4 +43,22 @@
     <color name="badge_admins_bg">#FEF3E0</color>
     <color name="unread_bg">#F7FAFF</color>
     <color name="unread_border">#BFD6FF</color>
+
+    <color name="renewal_background">#F8F9FE</color>
+
+    <color name="renewal_navy">#18265F</color>
+    <color name="renewal_indigo">#5865D9</color>
+    <color name="renewal_blue">#2F80ED</color>
+    <color name="renewal_purple">#8A4FC7</color>
+
+    <color name="renewal_lavender">#F0EEFF</color>
+    <color name="renewal_light_blue">#EAF4FF</color>
+
+    <color name="renewal_peach">#FFF0E4</color>
+    <color name="renewal_orange">#E98732</color>
+    <color name="renewal_orange_dark">#A9470C</color>
+    <color name="renewal_orange_text">#9B5A2C</color>
+
+    <color name="renewal_secondary">#65729A</color>
+    <color name="renewal_divider">#E2E6F2</color>
 </resources>

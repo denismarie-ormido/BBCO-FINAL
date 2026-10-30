@@ -8,7 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 
 class DocumentFolderAdapter(
     private val folders: List<DocumentFolderModel>,
-    private val onFolderClick: (DocumentFolderModel) -> Unit
+    private val onFolderClick: (DocumentFolderModel) -> Unit,
+    // Optional: long-press (pananglitan Rename / Delete sa folder nga gihimo sa admin)
+    private val onFolderLongClick: ((DocumentFolderModel) -> Unit)? = null
 ) : RecyclerView.Adapter<DocumentFolderAdapter.FolderRowViewHolder>() {
 
     inner class FolderRowViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -22,10 +24,29 @@ class DocumentFolderAdapter(
     }
 
     override fun onBindViewHolder(holder: FolderRowViewHolder, position: Int) {
+
         val folder = folders[position]
+
         holder.tvName.text = folder.folderName
-        holder.tvCount.text = "${folder.fileCount} files"
+
+        // Gihimo sa admin = "items" (folders + files), system folder = "files"
+        holder.tvCount.text =
+            if (folder.folderId.isNotBlank()) {
+                if (folder.fileCount == 1) "1 item" else "${folder.fileCount} items"
+            } else {
+                "${folder.fileCount} files"
+            }
+
         holder.itemView.setOnClickListener { onFolderClick(folder) }
+
+        if (onFolderLongClick != null) {
+            holder.itemView.setOnLongClickListener {
+                onFolderLongClick.invoke(folder)
+                true
+            }
+        } else {
+            holder.itemView.setOnLongClickListener(null)
+        }
     }
 
     override fun getItemCount(): Int = folders.size
